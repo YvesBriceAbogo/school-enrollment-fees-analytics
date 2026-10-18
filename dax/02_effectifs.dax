@@ -1,0 +1,138 @@
+// =====================================================
+// PROJET : SUIVI DES EFFECTIFS ET DES FRAIS DE SCOLARITÉ
+// AUTEUR : Brice Abogo
+//
+// FICHIER : 02_effectifs.dax
+//
+// OBJECTIF
+// Compter les élèves distincts représentés dans les
+// constatations de scolarité.
+//
+// TABLES UTILISÉES
+// Ecritures
+// Calendrier
+//
+// PRÉREQUIS
+// Un Compte T correspond à un seul élève.
+// Les identifiants sont renseignés et contrôlés.
+// Les débits du périmètre correspondent aux constatations.
+//
+// Relation active attendue :
+// Calendrier[Date] -> Ecritures[Date]
+//
+// CONVENTION ACADÉMIQUE
+// Le cycle commence le 1er août.
+//
+// LIMITES
+// Ces mesures ne constituent pas un suivi de présence.
+// Elles ne déduisent pas automatiquement les départs.
+// Les effectifs mensuels distincts ne sont pas additifs.
+//
+// UTILISATION DANS POWER BI
+// Créer ou modifier chaque mesure séparément.
+// Conserver la table d'accueil Ecritures si le paramètre
+// de champs existant référence les mesures dans cette table.
+// Ce fichier ne s'exécute pas en bloc dans la vue Requête DAX.
+// =====================================================
+
+
+// =====================================================
+// 1. EFFECTIF DANS LA PÉRIODE SÉLECTIONNÉE
+//
+// Nombre distinct de comptes élèves ayant une écriture
+// de constatation dans le contexte de filtre.
+//
+// KEEPFILTERS conserve l'intersection avec les filtres existants.
+// Les identifiants vides sont exclus.
+// Les identifiants constitués d'espaces doivent être signalés
+// par les contrôles de qualité en amont.
+//
+// Un élève peut être compté dans plusieurs mois s'il possède
+// des constatations dans chacun de ces mois.
+//
+// Format recommandé : nombre entier.
+// =====================================================
+
+Effectif =
+CALCULATE(
+    DISTINCTCOUNT('Ecritures'[Compte T]),
+    KEEPFILTERS(
+        'Ecritures'[Sens] = "D"
+    ),
+    KEEPFILTERS(
+        'Ecritures'[Compte T] <> BLANK()
+    )
+)
+
+
+// =====================================================
+// 2. EFFECTIF CUMULÉ DE L'ANNÉE ACADÉMIQUE
+//
+// Nom conservé : Effectif actuel.
+//
+// Compte les élèves distincts ayant une constatation
+// entre le 1er août du cycle et la fin du mois sélectionné.
+//
+// Le comptage distinct est recalculé sur toute la période.
+// Les effectifs mensuels ne sont pas additionnés.
+//
+// COMPORTEMENT DES SÉLECTIONS
+// - Une seule année académique doit être présente.
+// - Plusieurs mois d'un même cycle : dernier mois retenu.
+// - Plusieurs cycles : BLANK pour éviter un résultat ambigu.
+// - Mois postérieur au dernier mois de données : BLANK.
+//
+// La dernière date d'écriture est recherchée indépendamment
+// des filtres du rapport, afin de partager une même limite
+// de disponibilité des données.
+//
+// Format recommandé : nombre entier.
+// =====================================================
+
+Effectif actuel =
+VAR DateSelectionnee =
+    MAX('Calendrier'[Date])
+
+VAR DerniereDateDisponible =
+    CALCULATE(
+        MAX('Ecritures'[Date]),
+        REMOVEFILTERS()
+    )
+
+VAR UneSeuleAnneeAcademique =
+    HASONEVALUE('Calendrier'[Année académique])
+
+RETURN
+    IF(
+        NOT(UneSeuleAnneeAcademique)
+            || ISBLANK(DateSelectionnee)
+            || ISBLANK(DerniereDateDisponible),
+        BLANK(),
+
+        VAR DateFin =
+            EOMONTH(DateSelectionnee, 0)
+
+        VAR AnneeDebut =
+            YEAR(DateFin)
+                - IF(MONTH(DateFin) < 8, 1, 0)
+
+        VAR DateDebut =
+            DATE(AnneeDebut, 8, 1)
+
+        VAR FinDernierMoisDisponible =
+            EOMONTH(DerniereDateDisponible, 0)
+
+        RETURN
+            IF(
+                DateFin > FinDernierMoisDisponible,
+                BLANK(),
+                CALCULATE(
+                    [Effectif],
+                    FILTER(
+                        ALL('Calendrier'),
+                        'Calendrier'[Date] >= DateDebut
+                            && 'Calendrier'[Date] <= DateFin
+                    )
+                )
+            )
+    )
