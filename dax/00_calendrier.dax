@@ -1,0 +1,282 @@
+// =====================================================
+// PROJET : SUIVI DES EFFECTIFS ET DES FRAIS DE SCOLARITÉ
+// AUTEUR : Brice Abogo
+//
+// FICHIER : 00_calendrier.dax
+//
+// OBJECTIF
+// Construire le calendrier et les attributs nécessaires
+// aux analyses civiles, académiques, mensuelles et journalières.
+//
+// SOURCE
+// Ecritures[Date], de type Date.
+//
+// CONVENTION ACADÉMIQUE
+// Du 1er août au 31 juillet de l'année suivante.
+//
+// PRÉREQUIS
+// Les écritures doivent contenir au moins une date valide.
+//
+// UTILISATION DANS POWER BI
+// Créer ou modifier la table avec « Nouvelle table ».
+// Créer chaque colonne séparément avec « Nouvelle colonne ».
+// Marquer Calendrier comme table de dates avec [Date].
+//
+// IMPORTANT
+// Ce fichier contient plusieurs définitions indépendantes.
+// Il ne s'exécute pas en bloc dans la vue Requête DAX.
+// =====================================================
+
+
+// =====================================================
+// 1. TABLE CALCULÉE : Calendrier
+//
+// La plage couvre les années académiques complètes
+// contenant la première et la dernière date d'écriture.
+//
+// Exemple : écritures d'août 2025 à avril 2026
+// -> calendrier du 01/08/2025 au 31/07/2026.
+//
+// Les dates ajoutées ne créent aucune donnée comptable.
+// =====================================================
+
+Calendrier =
+VAR DateMinSource =
+    MIN('Ecritures'[Date])
+
+VAR DateMaxSource =
+    MAX('Ecritures'[Date])
+
+VAR DebutCalendrier =
+    IF(
+        ISBLANK(DateMinSource),
+        ERROR(
+            "Impossible de créer le calendrier : aucune date d'écriture disponible."
+        ),
+        DATE(
+            YEAR(DateMinSource)
+                - IF(MONTH(DateMinSource) < 8, 1, 0),
+            8,
+            1
+        )
+    )
+
+VAR FinCalendrier =
+    IF(
+        ISBLANK(DateMaxSource),
+        ERROR(
+            "Impossible de créer le calendrier : aucune date d'écriture disponible."
+        ),
+        DATE(
+            YEAR(DateMaxSource)
+                + IF(MONTH(DateMaxSource) >= 8, 1, 0),
+            7,
+            31
+        )
+    )
+
+RETURN
+    CALENDAR(
+        DebutCalendrier,
+        FinCalendrier
+    )
+
+
+// =====================================================
+// 2. COLONNE : Années
+//
+// Année civile.
+// Nom conservé pour correspondre au modèle initial.
+// =====================================================
+
+Années =
+YEAR('Calendrier'[Date])
+
+
+// =====================================================
+// 3. COLONNE : AnneeDebutAcademique
+//
+// Année de début du cycle académique.
+// Exemple : février 2026 -> 2025.
+//
+// Sert notamment au tri de l'année académique.
+// =====================================================
+
+AnneeDebutAcademique =
+YEAR('Calendrier'[Date])
+    - IF(
+        MONTH('Calendrier'[Date]) < 8,
+        1,
+        0
+    )
+
+
+// =====================================================
+// 4. COLONNE : Année académique
+//
+// Libellé du cycle.
+// Exemple : 2025/2026.
+//
+// Dépend de la colonne AnneeDebutAcademique.
+// Trier par AnneeDebutAcademique.
+// =====================================================
+
+Année académique =
+FORMAT(
+    'Calendrier'[AnneeDebutAcademique],
+    "0000"
+)
+    & "/"
+    & FORMAT(
+        'Calendrier'[AnneeDebutAcademique] + 1,
+        "0000"
+    )
+
+
+// =====================================================
+// 5. COLONNE : Mois
+//
+// Libellé abrégé du mois en français.
+// Pour le cycle scolaire, trier par Mois académique num.
+// =====================================================
+
+Mois =
+FORMAT(
+    'Calendrier'[Date],
+    "mmm",
+    "fr-FR"
+)
+
+
+// =====================================================
+// 6. COLONNE : Mois num
+//
+// Numéro du mois civil : janvier = 1, décembre = 12.
+// Nom conservé pour correspondre au modèle initial.
+// =====================================================
+
+Mois num =
+MONTH('Calendrier'[Date])
+
+
+// =====================================================
+// 7. COLONNE : Mois académique num
+//
+// Position du mois dans le cycle académique.
+// Août = 1, septembre = 2, ..., juillet = 12.
+// =====================================================
+
+Mois académique num =
+MOD(
+    MONTH('Calendrier'[Date]) - 8,
+    12
+) + 1
+
+
+// =====================================================
+// 8. COLONNE : Year-month
+//
+// Libellé mois-année.
+// Nom conservé pour correspondre au modèle initial.
+//
+// Exemple : octobre 2025 -> 10-25.
+// Trier par AnneeMoisTri, et non alphabétiquement.
+// =====================================================
+
+Year-month =
+FORMAT(
+    'Calendrier'[Date],
+    "mm-yy"
+)
+
+
+// =====================================================
+// 9. COLONNE : AnneeMoisTri
+//
+// Clé numérique de tri chronologique.
+// Exemple : octobre 2025 -> 202510.
+// =====================================================
+
+AnneeMoisTri =
+YEAR('Calendrier'[Date]) * 100
+    + MONTH('Calendrier'[Date])
+
+
+// =====================================================
+// 10. COLONNE : Date_jour
+//
+// Libellé de date pour l'affichage.
+//
+// L'année est affichée sur quatre chiffres.
+// FORMAT renvoie du texte : cette colonne ne remplace pas
+// [Date] pour les relations ou les calculs temporels.
+//
+// Trier par Date.
+// =====================================================
+
+Date_jour =
+FORMAT(
+    'Calendrier'[Date],
+    "dd-MM-yyyy",
+    "fr-FR"
+)
+
+
+// =====================================================
+// 11. COLONNE : Year Week_num
+//
+// Numéro de semaine de l'année.
+// Les semaines commencent le lundi.
+//
+// Convention WEEKNUM avec return_type = 2.
+// Il ne s'agit pas de la numérotation ISO des semaines.
+//
+// Ne pas utiliser ce numéro seul comme identifiant
+// unique de semaine sur plusieurs années.
+// =====================================================
+
+Year Week_num =
+WEEKNUM(
+    'Calendrier'[Date],
+    2
+)
+
+
+// =====================================================
+// 12. COLONNE : Week Day_num
+//
+// Ordre des jours de la semaine.
+// Lundi = 1, ..., dimanche = 7.
+// =====================================================
+
+Week Day_num =
+WEEKDAY(
+    'Calendrier'[Date],
+    2
+)
+
+
+// =====================================================
+// 13. COLONNE : Day Name
+//
+// Libellé abrégé du jour en français.
+// Trier par Week Day_num.
+// =====================================================
+
+Day Name =
+FORMAT(
+    'Calendrier'[Date],
+    "ddd",
+    "fr-FR"
+)
+
+
+// =====================================================
+// 14. COLONNE : Month Day_num
+//
+// Numéro du jour dans le mois, de 1 à 31.
+// Utilisé notamment dans la présentation journalière.
+// =====================================================
+
+Month Day_num =
+DAY('Calendrier'[Date])
