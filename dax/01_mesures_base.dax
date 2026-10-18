@@ -1,0 +1,121 @@
+// =====================================================
+// PROJET : SUIVI DES EFFECTIFS ET DES FRAIS DE SCOLARITÉ
+// AUTEUR : Brice Abogo
+//
+// FICHIER : 01_mesures_base.dax
+//
+// OBJECTIF
+// Définir les mesures fondamentales sur les écritures
+// comptables du périmètre scolaire.
+//
+// TABLE UTILISÉE
+// Ecritures
+//
+// PRÉREQUIS
+// Les contreparties de produits et de trésorerie
+// ont été exclues dans Power Query.
+// Montants est une colonne numérique.
+// Sens contient D ou C selon la convention du projet.
+//
+// CONVENTIONS
+// D : constatation de la scolarité sur le compte élève.
+// C : règlement sur le compte élève.
+// Les montants sources sont non négatifs.
+//
+// Les mesures respectent le contexte de filtre.
+// Aucun cumul académique n'est appliqué dans ce fichier.
+//
+// UTILISATION DANS POWER BI
+// Créer ou modifier chaque mesure séparément.
+// Ce fichier ne s'exécute pas en bloc dans la vue Requête DAX.
+// =====================================================
+
+
+// =====================================================
+// 1. TOTAL DES MONTANTS
+//
+// Mesure technique utilisée par les mesures spécialisées.
+//
+// Additionne les montants des écritures du contexte,
+// sans distinction automatique entre débit et crédit.
+//
+// Si les deux sens sont présents, cette somme ne constitue
+// ni un solde comptable ni le montant de la scolarité.
+//
+// Unité : FCFA.
+// Format recommandé : nombre avec séparateur de milliers.
+// =====================================================
+
+Total Montants =
+SUM('Ecritures'[Montants])
+
+
+// =====================================================
+// 2. NOMBRE DE LIGNES COMPTABLES
+//
+// Compte les lignes présentes dans le contexte de filtre.
+//
+// COUNTROWS dénombre les écritures, sans dépendre
+// du remplissage d'une colonne particulière.
+//
+// Cette mesure ne représente pas le nombre d'élèves.
+// Les champs obligatoires doivent être contrôlés en amont.
+//
+// Format recommandé : nombre entier.
+// =====================================================
+
+Total lignes écritures =
+COUNTROWS('Ecritures')
+
+
+// =====================================================
+// 3. SCOLARITÉ CONSTATÉE
+//
+// Nom de mesure conservé : Total Pension.
+//
+// Additionne les montants au débit des comptes élèves.
+//
+// KEEPFILTERS conserve l'intersection avec un éventuel
+// filtre déjà appliqué à la colonne Sens.
+//
+// Les filtres de date et les autres filtres métier
+// restent applicables selon les relations du modèle.
+//
+// Unité : FCFA.
+// Format recommandé : nombre avec séparateur de milliers.
+// =====================================================
+
+Total Pension =
+CALCULATE(
+    [Total Montants],
+    KEEPFILTERS(
+        'Ecritures'[Sens] = "D"
+    )
+)
+
+
+// =====================================================
+// 4. RÈGLEMENTS ENREGISTRÉS
+//
+// Additionne les montants au crédit des comptes élèves.
+//
+// Dans le périmètre confirmé, ces crédits correspondent
+// aux règlements de scolarité.
+//
+// Un paiement de la période peut régler des frais
+// constatés pendant une période antérieure.
+//
+// KEEPFILTERS conserve l'intersection avec un éventuel
+// filtre déjà appliqué à la colonne Sens.
+//
+// Unité : FCFA.
+// Format recommandé : nombre avec séparateur de milliers.
+// =====================================================
+
+Total Réglé =
+CALCULATE(
+    [Total Montants],
+    KEEPFILTERS(
+        'Ecritures'[Sens] = "C"
+    )
+)
