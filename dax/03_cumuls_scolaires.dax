@@ -1,0 +1,253 @@
+// =====================================================
+// PROJET : SUIVI DES EFFECTIFS ET DES FRAIS DE SCOLARITÉ
+// AUTEUR : Brice Abogo
+//
+// FICHIER : 03_cumuls_scolaires.dax
+//
+// OBJECTIF
+// Calculer les frais constatés, règlements, solde
+// et taux de recouvrement cumulés sur l'année académique.
+//
+// DÉPENDANCES
+// Ecritures[Date]
+// Calendrier[Date]
+// Calendrier[Année académique]
+// Mesure [Total Pension]
+// Mesure [Total Réglé]
+//
+// CONVENTIONS
+// Début du cycle : 1er août.
+// Arrêté mensuel : fin du mois sélectionné.
+// Une seule année académique doit être présente
+// dans le contexte de la mesure.
+//
+// Les mois postérieurs au dernier mois d'écriture
+// renvoient BLANK pour ne pas présenter de données futures.
+//
+// Les filtres scolaires restent applicables selon
+// les relations du modèle.
+//
+// UTILISATION DANS POWER BI
+// Créer ou modifier chaque mesure séparément.
+// Conserver les noms et la table d'accueil Ecritures
+// si le paramètre de champs existant les référence.
+//
+// Ce fichier ne s'exécute pas en bloc dans la vue Requête DAX.
+// =====================================================
+
+
+// =====================================================
+// 1. SCOLARITÉ CONSTATÉE CUMULÉE
+//
+// Cumule les frais depuis le début de l'année académique
+// jusqu'à la fin du mois sélectionné.
+//
+// La dernière date disponible est recherchée globalement,
+// indépendamment des filtres scolaires du rapport.
+//
+// Les montants restent filtrés par classe, niveau,
+// section ou compte élève selon le modèle.
+//
+// Unité : FCFA.
+// =====================================================
+
+Pensions déjà Constatées =
+VAR DateSelectionnee =
+    MAX('Calendrier'[Date])
+
+VAR DerniereDateDisponible =
+    CALCULATE(
+        MAX('Ecritures'[Date]),
+        REMOVEFILTERS()
+    )
+
+VAR UneSeuleAnneeAcademique =
+    HASONEVALUE('Calendrier'[Année académique])
+
+RETURN
+    IF(
+        NOT(UneSeuleAnneeAcademique)
+            || ISBLANK(DateSelectionnee)
+            || ISBLANK(DerniereDateDisponible),
+        BLANK(),
+
+        VAR DateFin =
+            EOMONTH(DateSelectionnee, 0)
+
+        VAR AnneeDebut =
+            YEAR(DateFin)
+                - IF(MONTH(DateFin) < 8, 1, 0)
+
+        VAR DateDebut =
+            DATE(AnneeDebut, 8, 1)
+
+        VAR FinDernierMoisDisponible =
+            EOMONTH(DerniereDateDisponible, 0)
+
+        RETURN
+            IF(
+                DateFin > FinDernierMoisDisponible,
+                BLANK(),
+                CALCULATE(
+                    [Total Pension],
+                    FILTER(
+                        ALL('Calendrier'),
+                        'Calendrier'[Date] >= DateDebut
+                            && 'Calendrier'[Date] <= DateFin
+                    )
+                )
+            )
+    )
+
+
+// =====================================================
+// 2. RÈGLEMENTS CUMULÉS
+//
+// Applique exactement les mêmes bornes temporelles
+// que la mesure des frais constatés cumulés.
+//
+// Les paiements sont pris en compte selon la date
+// de leur écriture dans le périmètre confirmé.
+//
+// Unité : FCFA.
+// =====================================================
+
+Règlements déjà perçus =
+VAR DateSelectionnee =
+    MAX('Calendrier'[Date])
+
+VAR DerniereDateDisponible =
+    CALCULATE(
+        MAX('Ecritures'[Date]),
+        REMOVEFILTERS()
+    )
+
+VAR UneSeuleAnneeAcademique =
+    HASONEVALUE('Calendrier'[Année académique])
+
+RETURN
+    IF(
+        NOT(UneSeuleAnneeAcademique)
+            || ISBLANK(DateSelectionnee)
+            || ISBLANK(DerniereDateDisponible),
+        BLANK(),
+
+        VAR DateFin =
+            EOMONTH(DateSelectionnee, 0)
+
+        VAR AnneeDebut =
+            YEAR(DateFin)
+                - IF(MONTH(DateFin) < 8, 1, 0)
+
+        VAR DateDebut =
+            DATE(AnneeDebut, 8, 1)
+
+        VAR FinDernierMoisDisponible =
+            EOMONTH(DerniereDateDisponible, 0)
+
+        RETURN
+            IF(
+                DateFin > FinDernierMoisDisponible,
+                BLANK(),
+                CALCULATE(
+                    [Total Réglé],
+                    FILTER(
+                        ALL('Calendrier'),
+                        'Calendrier'[Date] >= DateDebut
+                            && 'Calendrier'[Date] <= DateFin
+                    )
+                )
+            )
+    )
+
+
+// =====================================================
+// 3. SOLDE RESTANT
+//
+// Différence entre les frais et règlements cumulés.
+//
+// Si les deux composantes sont vides, le résultat reste vide.
+// Si une seule composante est présente, l'autre est traitée
+// comme zéro pour cette soustraction.
+//
+// Les éventuels soldes négatifs sont conservés pour examen.
+// Un solde positif n'est pas automatiquement un retard.
+//
+// Unité : FCFA.
+// =====================================================
+
+Solde restant =
+VAR PensionsCumulees =
+    [Pensions déjà Constatées]
+
+VAR ReglementsCumules =
+    [Règlements déjà perçus]
+
+RETURN
+    IF(
+        ISBLANK(PensionsCumulees)
+            && ISBLANK(ReglementsCumules),
+        BLANK(),
+        COALESCE(PensionsCumulees, 0)
+            - COALESCE(ReglementsCumules, 0)
+    )
+
+
+// =====================================================
+// 4. TAUX DE RECOUVREMENT CUMULÉ
+//
+// Les deux composantes utilisent la même période académique.
+//
+// DIVIDE renvoie BLANK lorsque le dénominateur
+// est nul ou vide.
+//
+// Ne pas multiplier par 100.
+// Appliquer le format Pourcentage dans Power BI.
+//
+// Le ratio n'est pas plafonné automatiquement à 100 %.
+// =====================================================
+
+% Recouvrement Global =
+DIVIDE(
+    [Règlements déjà perçus],
+    [Pensions déjà Constatées]
+)
+
+
+// =====================================================
+// 5. CUMUL DES PENSIONS POUR LES VISUELS MENSUELS
+//
+// Réutilise la définition commune.
+// Aucun second calcul cumulatif n'est nécessaire.
+//
+// Unité : FCFA.
+// =====================================================
+
+Cumul Mensuel Pensions =
+[Pensions déjà Constatées]
+
+
+// =====================================================
+// 6. CUMUL DES RÈGLEMENTS POUR LES VISUELS MENSUELS
+//
+// Réutilise la définition commune.
+// Aucun second calcul cumulatif n'est nécessaire.
+//
+// Unité : FCFA.
+// =====================================================
+
+Cumul Mensuel Réglé =
+[Règlements déjà perçus]
+
+
+// =====================================================
+// 7. SOLDE CUMULÉ POUR LES VISUELS MENSUELS
+//
+// Réutilise la différence des deux cumuls.
+// Ne pas additionner les soldes cumulés de plusieurs mois.
+//
+// Unité : FCFA.
+// =====================================================
+
+Cumul Mensuel Solde =
+[Solde restant]
