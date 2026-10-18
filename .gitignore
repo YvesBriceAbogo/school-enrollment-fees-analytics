@@ -1,0 +1,121 @@
+# =====================================================
+# PROJET : SUIVI DES EFFECTIFS ET DES FRAIS DE SCOLARITÉ
+# AUTEUR : Brice Abogo
+#
+# OBJECTIF
+# Exclure par défaut les données sources, modèles contenant
+# potentiellement des données et fichiers locaux sensibles.
+#
+# IMPORTANT
+# Ces règles concernent les fichiers non suivis par Git.
+# Elles ne retirent pas les fichiers déjà enregistrés.
+# Elles ne remplacent pas une vérification de confidentialité.
+# =====================================================
+
+
+# -----------------------------------------------------
+# 1. DOSSIERS RÉSERVÉS AUX DONNÉES NON PUBLIQUES
+# -----------------------------------------------------
+
+/data/raw/
+/data/private/
+/data/real/
+/private/
+/local/
+
+
+# -----------------------------------------------------
+# 2. EXPORTS COMPTABLES ET FICHIERS DE DONNÉES
+#
+# Inclut notamment E.txt, T.txt et G.txt.
+# Les échantillons fictifs éventuels seront autorisés
+# ultérieurement par des règles ciblées, après validation.
+# -----------------------------------------------------
+
+*.txt
+*.TXT
+
+*.csv
+*.CSV
+
+*.xls
+*.XLS
+*.xlsx
+*.XLSX
+*.xlsb
+*.XLSB
+*.xlsm
+*.XLSM
+
+
+# -----------------------------------------------------
+# 3. FICHIERS POWER BI NON VALIDÉS POUR DIFFUSION
+#
+# Un PBIX en mode Import peut contenir les données réelles.
+# Un PBIT ne contient pas les données importées, mais peut
+# exposer des requêtes, chemins et paramètres.
+# -----------------------------------------------------
+
+*.pbix
+*.PBIX
+*.pbit
+*.PBIT
+
+# Fichiers locaux et caches des projets Power BI.
+**/.pbi/
+
+
+# -----------------------------------------------------
+# 4. CONFIGURATION LOCALE ET SECRETS
+#
+# Ces règles portent sur des noms de fichiers.
+# Elles ne détectent pas les secrets inscrits ailleurs.
+# -----------------------------------------------------
+
+.env
+.env.*
+credentials.json
+secrets.json
+/config/local/
+
+
+# -----------------------------------------------------
+# 5. ARCHIVES ET SAUVEGARDES
+#
+# Elles peuvent contenir des données non publiques.
+# -----------------------------------------------------
+
+*.zip
+*.ZIP
+*.7z
+*.rar
+*.bak
+*.backup
+
+
+# -----------------------------------------------------
+# 6. FICHIERS TEMPORAIRES ET JOURNAUX LOCAUX
+# -----------------------------------------------------
+
+~$*
+*.tmp
+*.temp
+*.log
+
+
+# -----------------------------------------------------
+# 7. FICHIERS GÉNÉRÉS PAR LE SYSTÈME
+# -----------------------------------------------------
+
+.DS_Store
+Thumbs.db
+Desktop.ini
+desktop.ini
+
+
+# -----------------------------------------------------
+# Les fichiers de documentation (.md), scripts (.pq, .dax),
+# images et PDF ne sont pas exclus par ces règles.
+#
+# Leur contenu doit néanmoins être contrôlé avant diffusion.
+# -----------------------------------------------------
