@@ -1,0 +1,77 @@
+// =====================================================
+// PROJET : SUIVI DES EFFECTIFS ET DES FRAIS DE SCOLARITÉ
+// AUTEUR : Brice Abogo
+//
+// FICHIER : 04_parametre_mesures.dax
+//
+// OBJET POWER BI : Mesures
+// TYPE : Paramètre de champs.
+//
+// OBJECTIF
+// Permettre à l'utilisateur de sélectionner l'indicateur
+// présenté dans les graphiques.
+//
+// MESURES RÉFÉRENCÉES
+// [Pensions déjà Constatées]
+// [Règlements déjà perçus]
+// [Solde restant]
+// [Effectif actuel]
+//
+// TABLE D'ACCUEIL ATTENDUE DES MESURES
+// Ecritures
+//
+// PRÉREQUIS
+// Les quatre mesures doivent exister avant la création
+// ou la modification du paramètre.
+//
+// CRÉATION DANS POWER BI
+// Utiliser :
+// Modélisation > Nouveau paramètre > Champs.
+//
+// Si le paramètre existe déjà, conserver sa configuration
+// et vérifier son expression.
+//
+// IMPORTANT
+// Une table calculée ordinaire créée avec la même expression
+// ne reproduit pas à elle seule la configuration complète
+// d'un paramètre de champs.
+//
+// Conserver les colonnes et métadonnées générées par Power BI.
+// La table du paramètre reste déconnectée des tables métier.
+//
+// CONVENTIONS
+// Chaque ligne contient :
+// 1. le libellé proposé à l'utilisateur ;
+// 2. la référence de la mesure avec NAMEOF ;
+// 3. son ordre d'affichage.
+//
+// Les valeurs 0, 1, 2 et 3 servent uniquement à l'ordre.
+// Elles ne sont pas des montants ou des effectifs.
+//
+// Ce fichier documente l'expression du paramètre.
+// Il ne s'exécute pas en bloc dans la vue Requête DAX.
+// =====================================================
+
+Mesures =
+{
+    (
+        "Pensions déjà Constatées",
+        NAMEOF('Ecritures'[Pensions déjà Constatées]),
+        0
+    ),
+    (
+        "Règlements déjà perçus",
+        NAMEOF('Ecritures'[Règlements déjà perçus]),
+        1
+    ),
+    (
+        "Solde restant",
+        NAMEOF('Ecritures'[Solde restant]),
+        2
+    ),
+    (
+        "Effectif actuel",
+        NAMEOF('Ecritures'[Effectif actuel]),
+        3
+    )
+}
