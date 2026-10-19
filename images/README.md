@@ -263,7 +263,65 @@ et non uniquement aux lignes visibles sur l’image.
 
 ---
 
-## 6. Conventions de lecture
+## 6. Dashboard 4 — Situation individuelle
+
+[![Situation individuelle des élèves — démonstration synthétique](04-situation-individuelle.png)](04-situation-individuelle.png)
+
+Cette page présente le suivi de la scolarité constatée, des règlements
+et du solde restant par élève.
+
+> **Données de démonstration :** les lignes individuelles de cette
+> version sont entièrement synthétiques, conformément à la confirmation
+> de l’auteur. Elles ne reproduisent aucune situation réelle d’élève.
+
+### Contexte de la capture
+
+La capture présente l’année académique **2025/2026**, avec
+**octobre 2025** sélectionné, tous niveaux et toutes classes confondus,
+sans sélection d’un élève particulier.
+
+Les montants de situation sont cumulés depuis le **1er août 2025**
+jusqu’au **31 octobre 2025**.
+
+### Organisation de la page
+
+- Les cinq cartes en haut de page présentent les indicateurs de synthèse.
+- Le segment « Noms » permet de sélectionner un élève dans le rapport
+  interactif.
+- Le tableau « Situation globale de chaque élève » présente le détail
+  des montants par élève.
+
+### Informations présentées dans le tableau
+
+| Colonne | Signification |
+|---|---|
+| Noms | Prénom fictif utilisé pour la démonstration |
+| Niveau+ | Regroupement pédagogique et linguistique |
+| Classe | Classe associée à la ligne de démonstration |
+| Pensions déjà Constatées | Frais de scolarité constatés cumulés |
+| Règlements déjà perçus | Règlements cumulés |
+| Solde restant | Différence entre frais constatés et règlements cumulés |
+
+Les montants sont exprimés en FCFA.
+
+### Lecture des résultats
+
+Le tableau est défilant : la capture montre seulement une partie
+des lignes.
+
+Les totaux portent sur l’ensemble du contexte sélectionné,
+et non uniquement sur les lignes visibles dans l’image.
+
+Le solde restant n’est pas automatiquement un retard de paiement.
+L’identification des sommes échues nécessite les échéances applicables.
+
+Cette capture illustre l’interface de suivi individuel.
+La sélection d’un élève et le défilement du tableau sont disponibles
+dans le rapport interactif, pas dans l’image publiée sur GitHub.
+
+---
+
+## 7. Conventions de lecture
 
 - Les montants sont exprimés en FCFA.
 - Dans les graphiques, « K » représente des milliers et « M »
@@ -276,13 +334,12 @@ et non uniquement aux lignes visibles sur l’image.
 
 ---
 
-## 7. Autres pages du rapport — Captures à ajouter
+## 8. Autres pages du rapport — Captures à ajouter
 
 La galerie sera complétée progressivement avec les pages suivantes :
 
 | Page | Contenu |
 |---|---|
-| Dashboard 4 | Situation individuelle — version de démonstration entièrement synthétique |
 | Dashboard 5 | Suivi journalier — version de démonstration entièrement synthétique |
 
 Pour les dashboards 4 et 5, les lignes de démonstration sont entièrement
