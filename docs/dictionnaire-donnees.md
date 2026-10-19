@@ -10,8 +10,16 @@ Il distingue les informations provenant des exports Sage, les données
 ajoutées par Power Query et les objets calculés en DAX.
 
 Les types indiqués correspondent à la version préparée et documentée.
-Les formules DAX révisées doivent être testées avant validation définitive
-des résultats du rapport.
+
+Les contrôles exécutés et leurs résultats sont consignés dans le
+[journal de contrôle qualité](controle-qualite.md).
+Leurs conclusions concernent la version et les scénarios effectivement
+testés ; elles ne constituent pas une validation de tous les usages
+possibles du rapport.
+
+Ce dictionnaire distingue le modèle métier alimenté par les exports
+Sage de la version de démonstration utilisée pour les lignes
+individuelles des dashboards 4 et 5.
 
 ---
 
@@ -26,7 +34,9 @@ des résultats du rapport.
 | Situation de référence illustrée | Arrêté au 31 octobre 2025 |
 | Début des cumuls académiques | 1er août |
 | Devise | FCFA |
-| Nature des données | Réelles |
+| Nature des données sources | Réelles, issues des exports Sage |
+| Dashboards 1 à 3 — supports publics | Restitutions agrégées |
+| Dashboards 4 et 5 — démonstration publique | Lignes individuelles entièrement synthétiques |
 | Version publique | Sans identité réelle d’élève ni nom d’établissement |
 
 Le mois d’octobre est une situation de référence, et non une date
@@ -186,6 +196,21 @@ Deux lignes similaires peuvent correspondre à deux opérations distinctes.
 
 La présence du nom dans le modèle interne ne justifie pas sa diffusion
 dans le portfolio public.
+
+### Présentation dans la version de démonstration
+
+Le tableau de colonnes ci-dessus décrit le modèle métier interne.
+
+Dans les dashboards 4 et 5 de la galerie, le champ affiché sous
+le libellé « Noms » présente des prénoms fictifs.
+
+Les lignes individuelles de cette version sont entièrement synthétiques,
+conformément à la confirmation de l’auteur. Elles ne reproduisent
+aucune situation réelle d’élève et ne résultent pas seulement
+du remplacement des noms.
+
+Les prénoms restent des libellés de présentation, et non des clés
+de jointure.
 
 ### Classification documentée
 
@@ -412,44 +437,85 @@ comme une situation à la fin de la journée sélectionnée.
 
 ## 12. Qualité et limites
 
-Les contrôles Power Query ont été déclarés exécutés par l’auteur.
+Les contrôles Power Query et les scénarios de test DAX sont consignés
+dans le [journal de contrôle qualité](controle-qualite.md).
 
-Le contrôle de conservation a été déclaré conforme pour :
+Les résultats reposent sur les exécutions effectuées par l’auteur,
+ses confirmations et les éléments de preuve décrits dans ce journal.
 
-- le nombre de lignes ;
-- les lignes au débit et au crédit ;
-- les totaux débit et crédit avant et après enrichissement.
+### Synthèse des résultats documentés
 
-Ces conclusions portent sur le périmètre testé.
+| Contrôle | Conclusion consignée |
+|---|---|
+| Niveaux manquants, cohérence des classes et validité des écritures | Exécutés ; aucune anomalie signalée |
+| Conservation des lignes et des montants après enrichissement | Écarts nuls confirmés sur le périmètre testé |
+| Situation d’octobre 2025 | Montants mensuels et cumulés conformes aux repères |
+| Comptage distinct | 58 élèves en octobre ; 221 en cumul à fin octobre |
+| Continuité décembre-janvier et situation de février 2026 | Conformes aux repères testés |
+| Sélection de mai 2026 | Mesures cumulées vides selon la règle de disponibilité |
+| Filtre de section | Réaction des résultats confirmée par l’auteur |
 
-La validation des mesures DAX constitue une étape distincte.
-Le comptage distinct, les cumuls académiques et les interactions
-des filtres restent à consigner dans le journal de tests.
+### Portée des conclusions
 
-Un code documenté n’est pas automatiquement un résultat validé.
+Ces résultats concernent la version et les scénarios effectivement
+examinés.
+
+Ils ne démontrent pas automatiquement :
+
+- l’exhaustivité des exports Sage ;
+- la concordance avec le registre administratif des inscriptions ;
+- la validité de toutes les affectations par classe et niveau ;
+- le bon fonctionnement de tous les paramètres et interactions ;
+- la concordance entre toutes les versions du rapport.
+
+Les vérifications complémentaires restent détaillées dans le journal.
+
+Toute modification des données, des transformations, des relations
+ou des mesures nécessite de réexaminer les contrôles concernés.
+
+La version synthétique de démonstration doit être distinguée
+du modèle et des données de la campagne de tests documentée.
+
+La galerie illustre le rendu du rapport. Elle ne remplace pas
+les contrôles du modèle.
 
 ---
 
 ## 13. Confidentialité
 
-La colonne Nom et les comptes tiers peuvent identifier les élèves.
+Dans le modèle métier interne, la colonne Nom et les comptes tiers
+peuvent identifier les élèves.
 
-Leur présence dans le modèle interne n’autorise pas leur exposition
+Leur présence dans le modèle n’autorise pas leur exposition
 dans un dépôt public.
 
-Les supports publics doivent utiliser des agrégats autorisés,
-des exemples fictifs ou des données préparées pour ne pas permettre
-l’identification des élèves.
+### Supports de présentation
+
+La [galerie publique](../images/README.md) distingue :
+
+- les restitutions agrégées des dashboards 1 à 3 ;
+- les lignes individuelles entièrement synthétiques des dashboards 4 et 5.
+
+Cette qualification concerne la version de démonstration de ces pages.
+Elle ne requalifie pas les données sources réelles décrites
+dans ce dictionnaire.
+
+Les exports Sage réels, les correspondances avec les identités réelles
+et le modèle contenant les données détaillées restent hors
+du périmètre de publication.
 
 Masquer un champ dans un visuel ne retire pas sa valeur du modèle.
-Les fichiers PBIX, PDF, images et exports doivent être vérifiés
-avant diffusion.
+Un fichier PBIX en mode Import peut conserver les données détaillées.
+
+Les règles de diffusion sont précisées dans la
+[documentation de confidentialité](confidentialite.md).
 
 ---
 
 ## Documentation associée
 
 - [Présentation générale](../README.md)
+- [Galerie du rapport](../images/README.md)
 - [Données sources et conditions de diffusion](../data/README.md)
 - [Préparation Power Query](../powerquery/README.md)
 - [Mesures DAX](../dax/README.md)
