@@ -1,94 +1,170 @@
 # Suivi des effectifs et du recouvrement des frais de scolarité
 
-## De Sage Saari à Power BI : analyse comptable et pilotage scolaire
+**De Sage Saari à Power BI : analyse comptable et pilotage scolaire**
 
 **Auteur : Brice Abogo**  
 Comptable, analyste financier et analyste de données.
 
 **Technologies :** Sage Saari version 15 · Power Query M · DAX · Power BI
 
-> **État du dépôt :** documentation et ressources en cours de constitution.
-> Les scripts, contrôles et supports de présentation sont ajoutés progressivement.
+> **État du projet :** traitements et modèle documentés, résultats de
+> contrôle consignés et galerie de huit captures couvrant les cinq
+> dashboards du rapport.
+
+[Voir la galerie complète](images/README.md) ·
+[Consulter la méthodologie](docs/methodologie.md) ·
+[Consulter le journal de contrôle qualité](docs/controle-qualite.md)
 
 ---
 
 ## 1. Présentation du projet
 
-Ce projet transforme des exports comptables Sage Saari en un outil
-de suivi des effectifs comptabilisés et des frais de scolarité.
+Ce projet transforme des exports comptables Sage Saari en un rapport
+Power BI consacré au suivi des effectifs comptabilisés, des frais
+de scolarité constatés, des règlements et des soldes restant à recouvrer.
 
-Le rapport Power BI permet d’analyser les frais constatés, les règlements,
-les soldes restant à recouvrer et leur répartition par classe, niveau
-et section.
+Il associe la compréhension des opérations comptables à la préparation,
+à la modélisation et à la visualisation des données.
 
-Il comporte cinq pages, allant d’une synthèse des indicateurs à une
-analyse mensuelle, individuelle et journalière.
+Le rapport comporte cinq pages, allant d’une synthèse des indicateurs
+à des analyses mensuelles, individuelles et journalières.
 
-Le projet associe une compréhension des opérations comptables
-à la préparation, à la modélisation et à la visualisation des données.
+### Questions métier
 
----
-
-## 2. Problématique métier
-
-Un établissement scolaire doit disposer d’une information fiable
-pour suivre les inscriptions comptabilisées, les frais de scolarité
-et les paiements.
-
-Les exports comptables contiennent les mouvements nécessaires,
-mais leur exploitation directe ne fournit pas toujours une présentation
-adaptée aux besoins de la direction et du service de scolarité.
-
-Le projet répond notamment aux questions suivantes :
-
-- Combien d’élèves distincts ont fait l’objet d’une constatation de scolarité ?
+- Combien d’élèves distincts ont fait l’objet d’une constatation
+  de scolarité sur la période ?
 - Quels montants ont été constatés et réglés à la date retenue ?
 - Quel solde reste à recouvrer ?
-- Comment ces indicateurs se répartissent-ils par classe, niveau et section ?
-- Comment évoluent les règlements pendant l’année académique ?
-- Quels comptes nécessitent une vérification ou un suivi complémentaire ?
+- Comment ces indicateurs se répartissent-ils par classe, niveau
+  et section ?
+- Comment évoluent les mouvements et les cumuls au cours
+  de l’année académique ?
+- Quels comptes nécessitent une vérification ou un suivi complémentaire
+  dans l’environnement interne autorisé ?
 
----
+### Objectifs
 
-## 3. Objectifs
-
-- Exploiter les exports Sage dans un modèle analytique structuré.
-- Faciliter le rapprochement des frais constatés et des règlements.
+- Structurer les exports Sage pour l’analyse.
+- Distinguer les mouvements mensuels des situations cumulées.
 - Compter les élèves à partir de leurs comptes tiers distincts.
-- Suivre les montants mensuels et cumulés.
-- Présenter les soldes individuels dans un environnement interne autorisé.
-- Fournir une synthèse utilisable pour le pilotage et le recouvrement.
-- Documenter les règles de calcul et les contrôles de cohérence.
+- Faciliter la lecture des frais constatés, des règlements et des soldes.
+- Documenter les règles métier et les contrôles de cohérence.
+- Présenter les fonctionnalités du rapport dans un portfolio public,
+  sans exposer de situations individuelles réelles.
 
 ---
 
-## 4. Périmètre
+## 2. Aperçu du rapport et galerie
+
+### Vue de synthèse — Situation au 31 octobre 2025
+
+[![Vue de synthèse des effectifs et du recouvrement au 31 octobre 2025](images/01-overview.png)](images/01-overview.png)
+
+La page de synthèse présente cinq cartes et une répartition
+des indicateurs par niveau, section et classe.
+
+Le sélecteur **« Mesures »** permet de changer l’indicateur représenté
+dans les graphiques, tandis que les cinq cartes de synthèse restent
+visibles.
+
+### Dashboard 1 — Quatre variantes
+
+| Indicateur sélectionné | Capture |
+|---|---|
+| Effectif actuel | [Voir la répartition des effectifs](images/01-overview.png) |
+| Pensions déjà Constatées | [Voir la scolarité constatée](images/01-overview-scolarite.png) |
+| Règlements déjà perçus | [Voir les règlements](images/01-overview-reglements.png) |
+| Solde restant | [Voir les soldes](images/01-overview-solde.png) |
+
+### Dashboards 2 à 5
+
+| Page | Fonction | Capture |
+|---|---|---|
+| Dashboard 2 — Évolution mensuelle | Progression des cumuls de scolarité, des règlements et du solde | [Voir la page](images/02-evolution-mensuelle.png) |
+| Dashboard 3 — Détails mensuels | Mouvements du mois par niveau et classe, accompagnés des tendances mensuelles | [Voir la page](images/03-details-mensuels.png) |
+| Dashboard 4 — Situation individuelle | Suivi par élève, avec des lignes de démonstration entièrement synthétiques | [Voir la page](images/04-situation-individuelle.png) |
+| Dashboard 5 — Suivi journalier | Exploration par date et élève, avec des lignes de démonstration entièrement synthétiques | [Voir la page](images/05-suivi-journalier.png) |
+
+**[Ouvrir la galerie commentée — 8 captures](images/README.md)**
+
+Les captures sont statiques. Les filtres, boutons, recherches et
+défilements du rapport Power BI ne sont pas utilisables depuis GitHub.
+
+---
+
+## 3. Périmètre et conventions temporelles
 
 | Élément | Description |
 |---|---|
 | Année académique étudiée | 2025/2026 |
-| Données disponibles | Août 2025 à avril 2026 |
+| Cycle analytique | Du 1er août au 31 juillet |
+| Période disponible dans les données | Août 2025 à avril 2026 |
 | Situation de référence illustrée | Arrêté au 31 octobre 2025 |
-| Début retenu pour les cumuls académiques | 1er août |
+| Dernière date d’écriture affichée lors des tests | 02/04/2026 |
 | Devise | FCFA |
-| Source | Exports TXT issus de Sage Saari version 15 |
-| Nature des données | Données réelles |
-| Publication | Présentation du projet autorisée |
-| Version publique | Sans nom d’établissement ni identité réelle d’élève |
+| Application source | Sage Saari version 15 |
+| Origine du modèle métier | Exports comptables réels |
+| Détails publics des dashboards 4 et 5 | Situations entièrement synthétiques |
 
-Octobre 2025 est un exemple de situation analysée, et non une date
-figée dans les calculs.
+Octobre 2025 est une situation de référence, et non une date figée
+dans les calculs.
 
-Le rapport doit permettre de sélectionner un autre mois, notamment
-février 2026, tout en conservant le début de l’année académique
-pour les cumuls.
+Les cartes des captures présentent cette situation de référence.
+Les visuels d’évolution des dashboards 2 et 3 peuvent présenter
+plusieurs mois disponibles, comme expliqué dans la galerie.
 
-La période disponible ne constitue pas nécessairement l’intégralité
-de l’année scolaire.
-
-Les données de novembre 2025 à avril 2026 servent à une analyse
+Les données postérieures à octobre sont utilisées pour une lecture
 rétrospective. Elles ne sont pas présentées comme des informations
 déjà connues en octobre 2025.
+
+La période disponible ne couvre pas nécessairement tout le cycle
+académique. La présence d’écritures en avril ne démontre pas
+l’exhaustivité de ce mois.
+
+---
+
+## 4. Résultats de référence — Octobre 2025
+
+Les valeurs suivantes sont consignées dans le
+[journal de contrôle qualité](docs/controle-qualite.md)
+pour la version testée.
+
+### Situation cumulée du 1er août au 31 octobre 2025
+
+| Indicateur | Résultat consigné |
+|---|---:|
+| Effectif actuel — élèves distincts cumulés | 221 |
+| Scolarité constatée cumulée | 15 220 000 FCFA |
+| Règlements cumulés | 7 488 000 FCFA |
+| Solde restant | 7 732 000 FCFA |
+| Taux de recouvrement cumulé | 49,20 % |
+
+### Rapprochements arithmétiques
+
+```text
+15 220 000 − 7 488 000 = 7 732 000 FCFA
+
+7 488 000 / 15 220 000 ≈ 49,20 %
+```
+
+### Mouvements du seul mois d’octobre
+
+| Indicateur | Résultat consigné |
+|---|---:|
+| Élèves distincts ayant une constatation en octobre | 58 |
+| Scolarité constatée pendant le mois | 3 805 000 FCFA |
+| Règlements enregistrés pendant le mois | 3 286 000 FCFA |
+| Différence des flux mensuels | 519 000 FCFA |
+
+Les **58 élèves** ne doivent pas être assimilés automatiquement
+à de nouvelles inscriptions administratives.
+
+Les **221 élèves** correspondent au comptage distinct cumulé.
+Ce cumul n’est pas obtenu en additionnant les effectifs mensuels.
+
+Les règlements d’octobre peuvent concerner des frais constatés
+pendant les mois précédents. La différence de **519 000 FCFA**
+entre les flux du mois n’est donc pas le solde cumulé restant.
 
 ---
 
@@ -99,13 +175,31 @@ déjà connues en octobre 2025.
 | Fichier | Contenu |
 |---|---|
 | E.txt | Écritures comptables |
-| T.txt | Référentiel des comptes tiers |
+| T.txt | Référentiel des comptes tiers élèves |
 | G.txt | Référentiel des comptes généraux |
 
-Les fichiers sont produits à l’aide des fonctions d’export de Sage Saari.
+Ces fichiers sont produits à l’aide des fonctions d’export de Sage Saari.
 
-Le format des dates, le séparateur, l’encodage et les règles d’export
-seront documentés pour faciliter la reproduction des traitements.
+Leur structure, les formats de date, les encodages et les règles
+de préparation sont décrits dans le
+[dictionnaire des données](docs/dictionnaire-donnees.md)
+et la documentation [Power Query](powerquery/README.md).
+
+### Chaîne de traitement
+
+```text
+Exports Sage Saari : E.txt, T.txt et G.txt
+                    ↓
+Power Query : préparation, sélection du périmètre et enrichissement
+                    ↓
+Contrôles de qualité et de conservation des écritures
+                    ↓
+Modèle Power BI : écritures, référentiels et calendrier
+                    ↓
+DAX : mouvements, comptage distinct et cumuls académiques
+                    ↓
+Rapport : cinq dashboards et quatre variantes de synthèse
+```
 
 ### Tables du modèle
 
@@ -115,248 +209,291 @@ seront documentés pour faciliter la reproduction des traitements.
 | Comptes T | Référentiel des comptes élèves et attributs associés |
 | Comptes G | Référentiel des regroupements comptables |
 | Calendrier | Dimension temporelle |
-| Mesures | Paramètre de champs pour sélectionner l’indicateur affiché |
+| Mesures | Paramètre de champs pour sélectionner l’indicateur des graphiques |
 
-Un compte tiers correspond à un seul élève.
+Un compte tiers correspond à un seul élève. Le nom n’est pas utilisé
+comme clé de jointure.
 
-Les comptes généraux constituent des regroupements associés aux
-comptes tiers. Leur correspondance avec les classes, niveaux et sections
-doit être explicite.
+Le schéma documenté prévoit des relations un-à-plusieurs des dimensions
+vers les écritures :
 
-Les relations et les clés doivent être contrôlées afin d’éviter
-la multiplication des écritures lors des rapprochements.
+- `Calendrier[Date]` → `Ecritures[Date]` ;
+- `Comptes T[Compte T]` → `Ecritures[Compte T]` ;
+- `Comptes G[Compte G]` → `Ecritures[Compte G]`.
+
+Le filtrage simple va des dimensions vers les écritures.
+Le paramètre de champs `Mesures` reste déconnecté des tables métier.
+
+Les clés des référentiels doivent être uniques afin d’éviter
+la multiplication des lignes lors des enrichissements.
 
 ---
 
 ## 6. Préparation comptable avec Power Query
 
-La comptabilité utilisée est exclusivement consacrée à la scolarité.
+La comptabilité étudiée est consacrée à la scolarité.
 
-Les exports comprennent les écritures sur les comptes élèves ainsi
+Les exports comprennent les mouvements sur les comptes élèves ainsi
 que leurs contreparties de produits ou de trésorerie.
 
-Un retraitement Power Query sélectionne les lignes de comptes de tiers
-et écarte notamment ces contreparties avant le calcul des indicateurs.
+La préparation retient les comptes tiers du périmètre scolaire confirmé
+et exclut ces contreparties avant le calcul des indicateurs.
 
-Dans le périmètre confirmé du projet :
+### Convention comptable
 
-| Sens du compte tiers | Signification |
+| Sens sur le compte élève | Interprétation retenue |
 |---|---|
-| D — Débit | Constatation de la scolarité lors de l’inscription |
+| D — Débit | Constatation des frais de scolarité |
 | C — Crédit | Règlement pour l’élève |
 
-Cette sélection évite d’intégrer les contreparties comptables aux
-montants analysés.
+Après cette sélection, la table analytique ne représente plus
+l’intégralité des écritures en partie double.
 
-Les traitements comprennent également :
+**Il n’est donc pas attendu que le total débit soit égal au total crédit
+dans cette table.**
 
-- la lecture des exports TXT ;
-- la préparation des dates ;
-- le renommage et le typage des colonnes ;
-- le rapprochement avec les comptes tiers et généraux ;
-- l’enrichissement par classe, niveau et section.
+### Principaux traitements
 
-La documentation précisera les règles de sélection et les contrôles
-appliqués aux jointures.
+- Lecture des exports TXT avec leurs encodages documentés.
+- Préparation des dates et typage des colonnes.
+- Conservation des comptes comme identifiants textuels.
+- Sélection des comptes commençant par `4`, selon le périmètre confirmé.
+- Enrichissement de `Comptes T` à partir de `Comptes G`.
+- Enrichissement de `Ecritures` avec le niveau scolaire provenant
+  de `Comptes T`.
+- Contrôle des correspondances et de la conservation des lignes
+  et des montants.
+
+La classe de l’écriture reste celle portée par `E.txt`.
+La section est disponible dans le référentiel `Comptes T`.
+
+Aucune déduplication automatique des écritures n’est appliquée :
+deux lignes similaires peuvent correspondre à deux opérations distinctes.
+
+[Consulter les traitements Power Query](powerquery/README.md)
 
 ---
 
-## 7. Conventions des indicateurs
+## 7. Conventions des indicateurs DAX
 
-### Effectif
+| Mesure | Signification |
+|---|---|
+| Effectif | Comptes élèves distincts ayant une constatation dans la période sélectionnée |
+| Effectif actuel | Comptes élèves distincts ayant une constatation depuis le début du cycle jusqu’à l’arrêté mensuel |
+| Total Pension | Scolarité constatée sur la période sélectionnée |
+| Total Réglé | Règlements sur la période sélectionnée |
+| Pensions déjà Constatées | Scolarité constatée cumulée sur le cycle |
+| Règlements déjà perçus | Règlements cumulés sur le même cycle |
+| Solde restant | Scolarité constatée cumulée moins règlements cumulés |
+| % Recouvrement Global | Règlements cumulés divisés par scolarité constatée cumulée |
 
-L’effectif retenu correspond au nombre distinct de comptes élèves
-ayant une constatation de scolarité dans la période analysée.
+### Comptage distinct
 
 Le comptage porte sur `Compte T`, et non sur le nombre de lignes
-comptables au débit.
+comptables.
 
-Un élève ayant plusieurs écritures de constatation doit rester compté
-une seule fois dans le cumul.
+Un élève ayant plusieurs constatations reste compté une seule fois
+sur la période cumulée.
 
-Cet indicateur comptable ne constitue pas un suivi de présence quotidienne.
-
-### Frais de scolarité constatés
-
-Ils correspondent aux montants au débit des comptes tiers élèves
-dans le périmètre comptable retenu.
-
-### Règlements
-
-Ils correspondent aux montants au crédit de ces comptes tiers,
-selon la convention confirmée pour les exports.
-
-### Solde restant
-
-```text
-Scolarité constatée cumulée − Règlements cumulés
-```
-
-Le solde ne constitue pas automatiquement un retard de paiement :
-l’exigibilité dépend des échéances contractuelles applicables.
-
-### Taux de recouvrement
-
-```text
-Règlements cumulés / Scolarité constatée cumulée
-```
-
-Le numérateur et le dénominateur doivent utiliser les mêmes bornes
-temporelles et le même périmètre.
+Cet effectif comptable ne constitue ni un suivi de présence quotidienne
+ni un rapprochement automatique avec le registre administratif
+des inscriptions.
 
 ### Cumuls académiques
 
-Les cumuls commencent au 1er août et se poursuivent jusqu’à la fin
+Les cumuls commencent au **1er août** et se poursuivent jusqu’à la fin
 du mois sélectionné.
-
-Exemples :
 
 | Mois sélectionné | Période cumulée |
 |---|---|
-| Octobre 2025 | 1er août au 31 octobre 2025 |
-| Février 2026 | 1er août 2025 au 28 février 2026 |
-| Avril 2026 | 1er août 2025 au 30 avril 2026 |
+| Octobre 2025 | 01/08/2025 au 31/10/2025 |
+| Février 2026 | 01/08/2025 au 28/02/2026 |
+| Avril 2026 | 01/08/2025 au 30/04/2026, selon les écritures disponibles |
 
-Le cumul ne recommence pas en janvier.
+Le cumul ne recommence pas à zéro en janvier.
 
-La sélection d’un mois futur ne doit pas être interprétée comme
-la disponibilité de données futures complètes.
+Les mesures cumulatives documentées :
 
----
+- exigent une seule année académique dans le contexte ;
+- retiennent le dernier mois si plusieurs mois du même cycle
+  sont sélectionnés ;
+- renvoient une valeur vide si le mois sélectionné dépasse le dernier
+  mois contenant des écritures.
 
-## 8. Organisation du rapport
+Une valeur vide au-delà des données disponibles ne signifie
+ni un effectif nul ni un solde intégralement réglé.
 
-| Page | Fonction |
-|---|---|
-| Vue de synthèse | Indicateurs globaux et répartitions par classe, niveau et section |
-| Progression académique | Cumuls des frais, règlements et soldes |
-| Analyse mensuelle | Mouvements de constatation et de règlement du mois |
-| Situation individuelle | Analyse du compte élève dans l’environnement interne |
-| Suivi journalier | Exploration des opérations par date |
+Les cumuls des différentes lignes mensuelles ne doivent pas être
+additionnés pour obtenir un total annuel.
 
-Un paramètre de champs permet de modifier l’indicateur présenté
-dans les graphiques de synthèse.
+### Interprétation financière
 
-Les vues individuelles publiées devront utiliser des exemples fictifs
-ou une présentation ne permettant pas d’identifier les élèves réels.
+Le taux de recouvrement utilise le même périmètre et les mêmes bornes
+temporelles au numérateur et au dénominateur.
 
----
+Le **solde restant**, également intitulé « Solde dû » dans certains
+graphiques, n’est pas automatiquement une somme échue.
 
-## 9. Repères issus du rapport au 31 octobre 2025
+L’identification des retards de paiement nécessite les échéances
+applicables et la vérification des situations individuelles.
 
-| Indicateur | Valeur affichée |
-|---|---:|
-| Effectif présenté dans l’export | 221 |
-| Scolarité constatée cumulée | 15 220 000 FCFA |
-| Règlements cumulés | 7 488 000 FCFA |
-| Solde restant | 7 732 000 FCFA |
-| Taux de recouvrement | 49,20 % |
+Les tableaux journaliers utilisent les mesures de mouvements.
+Les cartes arrêtées en fin de mois ne représentent pas une situation
+à la fin de la journée sélectionnée.
 
-### Rapprochements arithmétiques
-
-```text
-15 220 000 − 7 488 000 = 7 732 000 FCFA
-
-7 488 000 / 15 220 000 ≈ 49,20 %
-```
-
-Ces chiffres sont des repères issus du rapport fourni.
-Le nombre de 221 doit être vérifié après application du comptage
-distinct des comptes élèves.
-
-Les scripts et leurs résultats ne doivent pas être considérés
-comme validés uniquement parce qu’ils sont documentés sur GitHub.
-
-### Mouvements du seul mois d’octobre
-
-| Indicateur | Montant |
-|---|---:|
-| Scolarité constatée en octobre | 3 805 000 FCFA |
-| Règlements enregistrés en octobre | 3 286 000 FCFA |
-| Différence des flux mensuels | 519 000 FCFA |
-
-Les règlements d’octobre peuvent concerner des frais constatés
-au cours des mois précédents.
-
-Les flux mensuels doivent être distingués des cumuls académiques.
+[Consulter les mesures DAX](dax/README.md)
 
 ---
 
-## 10. Recommandations de pilotage
+## 8. Contrôles de qualité et limites
 
-- Rapprocher les élèves distincts comptabilisés du registre des inscriptions.
-- Contrôler les totaux avec les exports Sage.
-- Vérifier les soldes individuels avant toute relance.
-- Distinguer les sommes exigibles des soldes non encore échus.
-- Suivre régulièrement les mouvements mensuels et les cumuls académiques.
-- Maintenir une correspondance fiable entre comptes, classes, niveaux et sections.
-- Réserver les informations nominatives aux utilisateurs internes autorisés.
+Les résultats reposent sur les exécutions effectuées par l’auteur,
+ses confirmations et les éléments consignés dans le journal.
 
-Aucune amélioration du recouvrement ni économie de temps n’est attribuée
-au tableau de bord sans mesure de résultat.
+**Campagne documentée :** 19/10/2026  
+**Version du modèle testé :** `suivi-scolarite-tests`
+
+### Synthèse des contrôles consignés
+
+| Domaine | Contrôle | Résultat documenté |
+|---|---|---|
+| Power Query | Niveaux manquants, cohérence des classes et validité des écritures | Exécutés ; aucune anomalie signalée |
+| Power Query | Conservation des lignes et des montants avant et après enrichissement | Écarts nuls confirmés sur le périmètre testé |
+| DAX | Situation d’octobre et comptage distinct | Montants consignés ; 58 élèves sur le mois et 221 en cumul |
+| DAX | Continuité décembre-janvier et situation de février | Conformes aux repères testés |
+| DAX | Mai 2026, au-delà du dernier mois d’écritures | Mesures cumulées vides selon la règle de disponibilité |
+| DAX | Filtre de section | Réaction des résultats confirmée par l’auteur |
+
+Ces conclusions concernent la version et les scénarios effectivement
+examinés. Elles ne constituent pas une certification de l’ensemble
+des données sources ni de toutes les interactions possibles.
+
+### Vérifications complémentaires
+
+Le journal recense notamment les vérifications restant à consigner :
+
+- rapprochement avec le registre administratif des inscriptions ;
+- exhaustivité des exports par rapport à Sage ;
+- tests détaillés par classe et niveau ;
+- comportement complet du paramètre de champs et des interactions
+  de la page journalière ;
+- sélections couvrant plusieurs cycles académiques ;
+- tri chronologique et concordance avec la version du rapport
+  publiée dans Power BI Service.
+
+Les captures illustrent le rendu du rapport. Elles ne remplacent pas
+les tests du modèle.
+
+Aucune amélioration du recouvrement ni économie de temps n’est
+revendiquée sans mesure de résultat.
+
+[Plan de contrôle qualité](quality/README.md) ·
+[Journal détaillé des contrôles](docs/controle-qualite.md)
 
 ---
 
-## 11. Compétences mises en valeur
-
-| Domaine | Application |
-|---|---|
-| Comptabilité | Lecture de la partie double et sélection du périmètre analytique |
-| Analyse financière | Suivi des constatations, règlements et soldes |
-| Sage Saari | Exploitation des exports comptables |
-| Power Query M | Lecture TXT, préparation, typage et jointures |
-| Modélisation | Organisation des écritures et référentiels |
-| DAX | Comptage distinct, cumuls académiques et filtres |
-| Visualisation | Navigation entre synthèse, suivi mensuel et détail journalier |
-| Gouvernance | Documentation, contrôles et confidentialité |
-
----
-
-## 12. Organisation prévue du dépôt
+## 9. Organisation et utilisation du dépôt
 
 ```text
 school-enrollment-fees-analytics/
 ├── README.md
-├── powerquery/
-├── dax/
-├── quality/
-├── docs/
-├── images/
-├── reports/
-└── data/
+├── .gitignore
+├── data/          # Documentation des sources et conditions de diffusion
+├── powerquery/    # Préparation et contrôles Power Query M
+├── dax/           # Mesures, calendrier et paramètre de champs
+├── quality/       # Plan et documentation des contrôles
+├── docs/          # Méthodologie, dictionnaire, journal et gouvernance
+└── images/        # Galerie commentée et huit captures du rapport
 ```
 
-Les fichiers seront ajoutés progressivement, avec leur rôle,
-leurs dépendances et leurs instructions d’utilisation.
+### Parcours de consultation
 
-Le dépôt conserve le code et la documentation.
-Il ne se connecte pas automatiquement à Sage et n’exécute pas
-les traitements Power BI.
+1. Découvrir les fonctionnalités dans la [galerie](images/README.md).
+2. Lire la [méthodologie](docs/methodologie.md) et le
+   [dictionnaire des données](docs/dictionnaire-donnees.md).
+3. Examiner les traitements [Power Query](powerquery/README.md)
+   et les mesures [DAX](dax/README.md).
+4. Consulter les [contrôles et résultats](docs/controle-qualite.md).
+5. Adapter les traitements à des données autorisées ou synthétiques,
+   puis rejouer les contrôles dans le nouvel environnement.
+
+Le dépôt conserve le code, la documentation et les supports
+de présentation. Il ne se connecte pas automatiquement à Sage
+et n’exécute pas les traitements Power BI.
+
+La reconstruction du modèle nécessite Power BI Desktop,
+des données compatibles et la configuration des requêtes,
+relations et mesures documentées.
+
+Les exports réels et le PBIX contenant ces données restent
+hors du périmètre de publication.
 
 ---
 
-## 13. Confidentialité et conditions de diffusion
+## 10. Documentation associée
 
-Le projet s’appuie sur des données réelles et sa présentation
-est autorisée.
+| Ressource | Contenu |
+|---|---|
+| [Galerie du rapport](images/README.md) | Huit captures commentées et conventions de lecture |
+| [Méthodologie](docs/methodologie.md) | Démarche et choix de traitement |
+| [Dictionnaire des données](docs/dictionnaire-donnees.md) | Sources, tables, colonnes et indicateurs |
+| [Données sources](data/README.md) | Provenance et conditions de diffusion |
+| [Power Query](powerquery/README.md) | Préparation et enrichissement des données |
+| [DAX](dax/README.md) | Mesures, calendrier et paramètre de champs |
+| [Plan de contrôle qualité](quality/README.md) | Contrôles prévus et règles de vérification |
+| [Journal de contrôle qualité](docs/controle-qualite.md) | Tests exécutés, résultats et limites |
+| [Confidentialité](docs/confidentialite.md) | Protection des données et supports publics |
+| [Déploiement](docs/deploiement.md) | Documentation de publication et d’exploitation |
 
-La version publique doit néanmoins limiter l’exposition des informations
-individuelles, particulièrement lorsqu’elles concernent des élèves mineurs.
+---
 
-Les exports nominatifs et le modèle contenant les données réelles
-ne sont pas destinés au dépôt public.
+## 11. Confidentialité et version de démonstration
 
-Pour démontrer les vues individuelles, des données fictives peuvent
-être utilisées et doivent être clairement identifiées comme telles.
+Le projet métier repose sur des données comptables réelles.
+Sa présentation est autorisée.
 
-Masquer un champ dans un rapport ne retire pas son contenu du modèle.
-Un fichier PBIX en mode Import peut contenir les données détaillées.
+La version publique distingue :
 
-Les captures, PDF, données d’exemple et fichiers Power BI doivent être
-vérifiés avant diffusion.
+- les restitutions agrégées des dashboards 1 à 3 ;
+- les situations individuelles entièrement synthétiques
+  des dashboards 4 et 5.
 
-La provenance et les conditions de réutilisation seront précisées
-dans la documentation des données.
+Les lignes de démonstration des pages 4 et 5 ne reproduisent aucune
+situation réelle d’élève. Il ne s’agit pas seulement d’un remplacement
+des noms.
+
+Cette adaptation concerne la version de présentation de ces pages.
+Elle ne requalifie pas les données sources ni la version ayant servi
+aux contrôles documentés.
+
+Les supports publics ne présentent ni nom d’établissement ni identité
+réelle d’élève.
+
+Les exports Sage réels, les correspondances avec les identités réelles
+et le modèle contenant les données détaillées ne sont pas destinés
+au dépôt public.
+
+Masquer un champ dans un visuel ne retire pas sa valeur du modèle.
+Un fichier PBIX en mode Import peut conserver les données détaillées.
+
+Les règles de diffusion et de réutilisation sont décrites dans la
+[documentation des sources](data/README.md) et les
+[consignes de confidentialité](docs/confidentialite.md).
+
+---
+
+## 12. Compétences mises en valeur
+
+| Domaine | Application dans le projet |
+|---|---|
+| Comptabilité | Lecture de la partie double et sélection du périmètre analytique |
+| Analyse financière | Suivi des constatations, règlements, soldes et taux de recouvrement |
+| Sage Saari | Exploitation des exports comptables |
+| Power Query M | Lecture TXT, préparation des dates, typage, jointures et contrôles |
+| Modélisation | Organisation des écritures, référentiels et dimension temporelle |
+| DAX | Comptage distinct, cumuls académiques et gestion du contexte de filtre |
+| Power BI | Navigation, sélecteur d’indicateur et analyses à plusieurs granularités |
+| Gouvernance | Traçabilité des tests, documentation et distinction des supports publics |
 
 ---
 
