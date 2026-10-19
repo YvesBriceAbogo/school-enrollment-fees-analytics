@@ -19,9 +19,9 @@ de l’ensemble des données sources ni de tous les usages possibles du rapport.
 | Élément | Information |
 |---|---|
 | Responsable | Brice Abogo |
-| Date réelle d’exécution | À renseigner |
-| Version ou date d’extraction des fichiers | À renseigner |
-| Version du modèle testé | À renseigner |
+| Date réelle d’exécution | 19/10/2026 |
+| Version ou date d’extraction des fichiers | 07/10/2026 |
+| Version du modèle testé | suivi-scolarite-tests |
 | Référence du commit correspondant | À renseigner |
 | Année académique | 2025/2026 |
 | Début des cumuls | 1er août 2025 |
