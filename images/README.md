@@ -139,7 +139,68 @@ L’identification des retards nécessite les échéances applicables.
 
 ---
 
-## 4. Conventions de lecture
+## 4. Dashboard 2 — Évolution mensuelle des cumuls
+
+[![Évolution mensuelle de la scolarité, des règlements et du solde](02-evolution-mensuelle.png)](02-evolution-mensuelle.png)
+
+Cette page présente l’évolution cumulée de la scolarité constatée,
+des règlements et du solde restant pour les mois disponibles
+du cycle académique 2025/2026.
+
+### Deux périmètres de lecture
+
+Dans cette capture :
+
+- les cinq cartes en haut de page présentent la situation de référence
+  au **31 octobre 2025**, cumulée depuis le 1er août 2025 ;
+- le tableau et les trois graphiques présentent l’évolution mensuelle
+  disponible d’**août 2025 à avril 2026**.
+
+La sélection « 10-25 » correspond donc à la situation de référence
+des cartes, sans limiter ces visuels d’évolution à octobre.
+
+### Valeurs affichées dans le tableau
+
+Montants en FCFA.
+
+| Mois | Scolarité constatée cumulée | Règlements cumulés | Solde restant |
+|---|---:|---:|---:|
+| Août 2025 | 825 000 | 370 000 | 455 000 |
+| Septembre 2025 | 11 415 000 | 4 202 000 | 7 213 000 |
+| **Octobre 2025** | **15 220 000** | **7 488 000** | **7 732 000** |
+| Novembre 2025 | 15 447 500 | 10 388 000 | 5 059 500 |
+| Décembre 2025 | 15 447 500 | 11 493 000 | 3 954 500 |
+| Janvier 2026 | 15 447 500 | 12 807 500 | 2 640 000 |
+| Février 2026 | 15 447 500 | 13 833 000 | 1 614 500 |
+| Mars 2026 | 15 447 500 | 14 628 500 | 819 000 |
+| Avril 2026 | 15 447 500 | 14 698 500 | 749 000 |
+
+Les étiquettes des graphiques utilisent des montants abrégés et
+arrondis. Le tableau ci-dessus reprend les montants entiers affichés.
+
+### Lecture des cumuls
+
+Chaque ligne représente une situation cumulée depuis le début
+du cycle académique, à partir des écritures chargées.
+
+Les cumuls se poursuivent en janvier : ils ne sont pas remis à zéro
+au changement d’année civile.
+
+Il ne faut pas additionner les cumuls des différentes lignes pour
+obtenir un total annuel.
+
+Le solde restant correspond à la différence entre la scolarité
+constatée et les règlements cumulés. Le titre « Solde dû » utilisé
+dans le graphique ne signifie pas que toutes les sommes sont échues.
+
+### Limite de disponibilité
+
+La ligne d’avril 2026 reflète les écritures disponibles dans les
+données chargées. Elle ne démontre pas que le mois d’avril est complet.
+
+---
+
+## 5. Conventions de lecture
 
 - Les montants sont exprimés en FCFA.
 - Dans les graphiques, « K » représente des milliers et « M »
@@ -152,13 +213,12 @@ L’identification des retards nécessite les échéances applicables.
 
 ---
 
-## 5. Autres pages du rapport — Captures à ajouter
+## 6. Autres pages du rapport — Captures à ajouter
 
 La galerie sera complétée progressivement avec les pages suivantes :
 
 | Page | Contenu |
 |---|---|
-| Dashboard 2 | Évolution mensuelle des cumuls de scolarité, des règlements et du solde |
 | Dashboard 3 | Détails mensuels par niveau et classe, accompagnés des tendances |
 | Dashboard 4 | Situation individuelle — version de démonstration entièrement synthétique |
 | Dashboard 5 | Suivi journalier — version de démonstration entièrement synthétique |
