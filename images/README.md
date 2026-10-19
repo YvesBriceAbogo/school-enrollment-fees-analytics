@@ -200,7 +200,70 @@ données chargées. Elle ne démontre pas que le mois d’avril est complet.
 
 ---
 
-## 5. Conventions de lecture
+## 5. Dashboard 3 — Détails et tendances mensuels
+
+[![Détails et tendances mensuels de la scolarité et des règlements](03-details-mensuels.png)](03-details-mensuels.png)
+
+Cette page associe le détail du mois sélectionné à une vue des
+tendances mensuelles de la scolarité constatée et des règlements.
+
+### Organisation de la page
+
+La capture présente trois lectures complémentaires :
+
+- **Les cartes de synthèse** : situation cumulée du 1er août
+  au 31 octobre 2025.
+- **Les tableaux à gauche** : détail d’octobre 2025 par niveau
+  et classe.
+- **Les graphiques à droite** : évolution des mouvements mensuels
+  sur plusieurs mois disponibles.
+
+Dans cette capture, la courbe de scolarité présente les mois
+d’août à novembre 2025, tandis que celle des règlements présente
+les mois d’août 2025 à avril 2026.
+
+Les graphiques représentent des montants propres à chaque mois,
+contrairement aux graphiques cumulatifs de Dashboard 2.
+
+### Repères pour octobre 2025
+
+| Indicateur mensuel | Valeur affichée |
+|---|---:|
+| Élèves distincts ayant une constatation de scolarité | 58 |
+| Scolarité constatée pendant le mois | 3 805 000 FCFA |
+| Règlements enregistrés pendant le mois | 3 286 000 FCFA |
+
+Ces montants mensuels sont distincts des montants cumulés des cartes :
+
+- **15 220 000 FCFA** de scolarité constatée cumulée ;
+- **7 488 000 FCFA** de règlements cumulés.
+
+### Interprétation de l’effectif
+
+Les **58 élèves** correspondent aux comptes élèves distincts
+ayant une constatation de scolarité en octobre.
+
+Cette valeur ne doit pas être présentée automatiquement comme
+le nombre de nouvelles inscriptions.
+
+Les **221 élèves** de la carte « Effectif actuel » correspondent
+au comptage distinct cumulé depuis le début du cycle jusqu’à
+fin octobre.
+
+L’effectif cumulé est recalculé sur toute la période :
+il n’est pas obtenu en additionnant les effectifs mensuels.
+
+### Lecture des tableaux
+
+Les tableaux sont défilants : la capture ne montre qu’une partie
+de leurs lignes.
+
+Les totaux correspondent à l’ensemble du contexte sélectionné,
+et non uniquement aux lignes visibles sur l’image.
+
+---
+
+## 6. Conventions de lecture
 
 - Les montants sont exprimés en FCFA.
 - Dans les graphiques, « K » représente des milliers et « M »
@@ -213,13 +276,12 @@ données chargées. Elle ne démontre pas que le mois d’avril est complet.
 
 ---
 
-## 6. Autres pages du rapport — Captures à ajouter
+## 7. Autres pages du rapport — Captures à ajouter
 
 La galerie sera complétée progressivement avec les pages suivantes :
 
 | Page | Contenu |
 |---|---|
-| Dashboard 3 | Détails mensuels par niveau et classe, accompagnés des tendances |
 | Dashboard 4 | Situation individuelle — version de démonstration entièrement synthétique |
 | Dashboard 5 | Suivi journalier — version de démonstration entièrement synthétique |
 
