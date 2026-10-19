@@ -321,7 +321,72 @@ dans le rapport interactif, pas dans l’image publiée sur GitHub.
 
 ---
 
-## 7. Conventions de lecture
+## 7. Dashboard 5 — Suivi journalier
+
+[![Suivi journalier de la scolarité et des règlements — démonstration synthétique](05-suivi-journalier.png)](05-suivi-journalier.png)
+
+Cette page présente le détail des constatations de scolarité et
+des règlements par date, élève et classe.
+
+> **Données de démonstration :** les lignes individuelles de cette
+> version sont entièrement synthétiques, conformément à la confirmation
+> de l’auteur. Elles ne reproduisent aucune situation réelle d’élève.
+
+### Organisation de la page
+
+La capture présente l’année académique **2025/2026**, avec
+**octobre 2025** sélectionné, tous niveaux et toutes classes confondus.
+
+La page associe :
+
+- les cinq cartes de synthèse ;
+- un calendrier destiné à sélectionner un jour ;
+- un segment de recherche et de sélection par nom ;
+- un tableau des constatations de scolarité et des règlements.
+
+Le tableau affiche la date, le prénom fictif, la classe, le montant
+de scolarité constaté et le montant réglé.
+
+### Distinguer les mouvements et les cumuls
+
+Les montants du tableau sont calculés avec les mesures de mouvements
+« Total Pension » et « Total Réglé ».
+
+Dans cette capture, les totaux du tableau correspondent à octobre 2025,
+tandis que les cartes présentent les cumuls depuis le début du cycle.
+
+Montants en FCFA.
+
+| Indicateur | Tableau — octobre 2025 | Cartes — cumul d’août à octobre 2025 |
+|---|---:|---:|
+| Scolarité constatée | 3 805 000 | 15 220 000 |
+| Règlements | 3 286 000 | 7 488 000 |
+
+Les cartes de situation sont arrêtées en fin de mois.
+Elles ne doivent pas être interprétées comme une situation à la fin
+de la journée sélectionnée.
+
+### Précautions de lecture
+
+Le titre du tableau contient le terme « inscriptions ».
+Dans le périmètre comptable documenté, les montants de scolarité
+correspondent toutefois à des constatations de frais.
+
+Une constatation comptable ne démontre pas à elle seule une nouvelle
+inscription administrative. Un même élève peut apparaître à plusieurs
+dates.
+
+Le tableau est défilant : les totaux portent sur l’ensemble du contexte
+sélectionné, et non uniquement sur les lignes visibles dans la capture.
+
+Le calendrier, la recherche par nom et le défilement ne sont pas
+utilisables depuis l’image publiée sur GitHub.
+Cette capture illustre l’interface.
+
+---
+
+
+## 8. Conventions de lecture
 
 - Les montants sont exprimés en FCFA.
 - Dans les graphiques, « K » représente des milliers et « M »
@@ -334,21 +399,31 @@ dans le rapport interactif, pas dans l’image publiée sur GitHub.
 
 ---
 
-## 8. Autres pages du rapport — Captures à ajouter
+## 9. Périmètre de la galerie et données de démonstration
 
-La galerie sera complétée progressivement avec les pages suivantes :
+La galerie comprend huit captures représentant les cinq pages
+du rapport :
 
-| Page | Contenu |
-|---|---|
-| Dashboard 5 | Suivi journalier — version de démonstration entièrement synthétique |
+| Page | Captures présentées |
+|---|---:|
+| Dashboard 1 — Vue de synthèse, quatre indicateurs | 4 |
+| Dashboard 2 — Évolution mensuelle des cumuls | 1 |
+| Dashboard 3 — Détails et tendances mensuels | 1 |
+| Dashboard 4 — Situation individuelle | 1 |
+| Dashboard 5 — Suivi journalier | 1 |
+| **Total** | **8** |
 
-Pour les dashboards 4 et 5, les lignes de démonstration sont entièrement
+Les lignes individuelles des dashboards 4 et 5 sont entièrement
 synthétiques, conformément à la confirmation de l’auteur :
-elles ne reproduisent aucune situation individuelle réelle.
+elles ne reproduisent aucune situation réelle d’élève.
 
-Cette distinction concerne la version de présentation de ces pages.
+Cette qualification concerne la version de démonstration de ces pages.
 Elle ne requalifie pas les données sources décrites dans la
 documentation du projet.
+
+La galerie présente le rendu du rapport et ses principaux usages.
+Les contrôles du modèle et leurs limites sont documentés séparément
+dans le journal de contrôle qualité.
 
 ---
 
