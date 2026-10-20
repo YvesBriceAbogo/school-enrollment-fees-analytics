@@ -10,9 +10,14 @@ Il précise les choix de préparation, les conventions métier,
 les règles temporelles et les contrôles nécessaires à l’interprétation
 des résultats.
 
-Les contrôles Power Query ont été déclarés exécutés par l’auteur.
-La validation des mesures DAX révisées constitue une étape distincte,
-dont les résultats doivent être consignés dans le journal de contrôle.
+Les contrôles Power Query et les scénarios DAX exécutés sont consignés
+dans le [journal de contrôle qualité](controle-qualite.md).
+Leurs conclusions concernent la version et les scénarios effectivement
+examinés, et non tous les usages possibles du rapport.
+
+La constitution de la galerie publique est une étape distincte.
+Les captures illustrent le rendu du rapport sans remplacer
+les tests du modèle.
 
 ---
 
@@ -29,9 +34,16 @@ Le projet vise à fournir une lecture structurée :
 
 La démarche associe connaissance comptable et traitement des données.
 
-Les indicateurs doivent être suffisamment documentés pour distinguer
-une inscription comptabilisée, un mouvement financier, un cumul
-et une situation arrêtée à une date donnée.
+Les indicateurs doivent permettre de distinguer :
+
+- une constatation comptable et une inscription administrative ;
+- un nombre de lignes et un nombre d’élèves distincts ;
+- un mouvement de période et une situation cumulée ;
+- un solde restant et une somme effectivement échue.
+
+Le rapport soutient l’analyse et le suivi comptable.
+Il ne remplace pas les vérifications métier nécessaires avant
+une décision ou une relance.
 
 ---
 
@@ -39,20 +51,27 @@ et une situation arrêtée à une date donnée.
 
 | Élément | Convention retenue |
 |---|---|
-| Source | Exports TXT de Sage Saari version 15 |
-| Nature des données | Réelles |
-| Périmètre comptable | Comptabilité exclusivement consacrée à la scolarité |
+| Source du modèle métier | Exports TXT de Sage Saari version 15 |
+| Nature des données sources | Réelles |
+| Périmètre comptable | Comptabilité consacrée à la scolarité |
 | Année académique étudiée | 2025/2026 |
 | Données disponibles | Août 2025 à avril 2026 |
-| Début analytique du cycle | 1er août |
+| Cycle analytique | Du 1er août au 31 juillet |
 | Situation de référence illustrée | Arrêté au 31 octobre 2025 |
+| Dernière date d’écriture affichée lors des tests | 02/04/2026 |
 | Devise | FCFA |
+| Dashboards 1 à 3 — supports publics | Restitutions agrégées |
+| Dashboards 4 et 5 — démonstration publique | Lignes individuelles entièrement synthétiques, selon la confirmation de l’auteur |
 
-La date du 31 octobre 2025 sert d’illustration.
+La date du 31 octobre 2025 sert de situation de référence.
 Elle n’est pas inscrite en dur dans les mesures cumulatives.
 
 Les données ultérieures sont utilisées pour une analyse rétrospective,
 et non comme une prévision connue à cette date.
+
+La période disponible ne constitue pas nécessairement un cycle
+académique complet. La présence d’écritures en avril ne démontre pas
+l’exhaustivité de ce mois.
 
 ---
 
@@ -67,11 +86,13 @@ Lecture et préparation dans Power Query
         ↓
 Comptes G → Comptes T → enrichissement d’Ecritures
         ↓
-Contrôles des référentiels, rapprochements et montants
+Contrôles des référentiels, jointures, lignes et montants
         ↓
 Modèle Power BI et calendrier académique
         ↓
 Mesures DAX et paramètre de champs
+        ↓
+Tests des scénarios métier et consignation des résultats
         ↓
 Rapport de synthèse et analyses détaillées
 ```
@@ -81,6 +102,10 @@ L’export depuis Sage est une étape distincte de l’actualisation Power BI.
 L’actualisation du modèle lit les fichiers disponibles.
 Elle ne produit pas automatiquement de nouveaux exports Sage
 si aucun mécanisme dédié n’a été mis en place.
+
+La préparation des supports publics intervient séparément :
+restitutions agrégées pour les premières pages et situations
+synthétiques pour les démonstrations individuelles.
 
 ---
 
@@ -96,19 +121,29 @@ Les traitements exploitent :
 
 Le paramètre `pDossierSource` indique le dossier contenant les exports.
 
-Les scripts publiés ne comportent pas de chemin personnel.
-L’utilisateur renseigne le chemin réel dans son environnement.
+Le chemin réel est renseigné dans l’environnement local autorisé.
+Les scripts destinés au dépôt public utilisent des paramètres
+et ne doivent pas contenir de secrets ou de chemins personnels.
 
-Les formats documentés sont :
+### Formats documentés
 
-- séparateur : virgule ;
-- absence d’en-tête dans les structures fournies ;
-- G.txt et E.txt annoncés en ANSI, lus en Windows-1252 dans les scripts ;
-- T.txt en UTF-8 ;
-- dates de E.txt au format JJMMAA.
+- Séparateur : virgule.
+- Absence d’en-tête dans les structures fournies.
+- G.txt et E.txt annoncés en ANSI, lus en Windows-1252 dans les scripts.
+- T.txt lu en UTF-8.
+- Dates de E.txt au format JJMMAA.
+- Comptes conservés comme identifiants textuels.
+- Montants préparés comme nombres entiers en FCFA.
 
-La restitution des accents et l’interprétation des dates doivent
-rester contrôlées après chaque changement de format d’export.
+L’appellation ANSI ne définit pas un encodage universel.
+
+La restitution des accents, l’ordre des colonnes et l’interprétation
+des dates doivent rester contrôlés après chaque changement
+de format d’export.
+
+La structure détaillée des fichiers est décrite dans le
+[dictionnaire des données](dictionnaire-donnees.md)
+et la documentation des [sources](../data/README.md).
 
 ---
 
@@ -134,6 +169,9 @@ Les regroupements utiles, tels que PRIMAIRE ou PRIMARY SCHOOL,
 ne sont pas supprimés au seul motif qu’ils ne désignent pas
 une classe précise.
 
+Un regroupement général ne doit toutefois pas être assimilé
+automatiquement à une classe précise.
+
 ### 5.2. Comptes tiers élèves
 
 La requête `Comptes T` :
@@ -152,10 +190,12 @@ La convention métier confirmée est :
 Un compte tiers correspond à un seul élève.
 ```
 
+Le nom n’est pas utilisé comme clé de jointure.
+
 Les classifications scolaires reposent sur des correspondances explicites.
 
 Une classe inconnue est signalée au lieu d’être affectée automatiquement
-au primaire francophone.
+à une catégorie par défaut.
 
 ---
 
@@ -174,7 +214,7 @@ Il n’est pas remplacé par la classe du référentiel élèves.
 
 ### 6.2. Conversion des dates
 
-La méthode initiale est conservée :
+La méthode documentée est conservée :
 
 1. Découper le texte en groupes de deux caractères.
 2. Recomposer la date avec `/`.
@@ -183,11 +223,12 @@ La méthode initiale est conservée :
 Exemple :
 
 ```text
-200825 → 20 / 08 / 25 → 20/08/2025
+200825 → 20/08/25 → 20/08/2025
 ```
 
 L’interprétation des années sur deux chiffres doit être vérifiée,
-notamment lors du passage de 2025 à 2026.
+notamment lors du passage de 2025 à 2026 ou de l’adaptation
+à d’autres périodes.
 
 ### 6.3. Sélection comptable
 
@@ -207,8 +248,11 @@ Dans les lignes retenues :
 Cette sélection évite d’additionner les contreparties avec les mouvements
 des comptes élèves.
 
-Le préfixe `4` n’est pas présenté comme une règle universelle pour
-identifier des élèves dans une autre comptabilité.
+Après exclusion des contreparties, il n’est pas attendu que
+le total débit soit égal au total crédit dans la table analytique.
+
+Le préfixe `4` n’est pas présenté comme une règle universelle
+pour identifier des élèves dans une autre comptabilité.
 
 ### 6.4. Typage
 
@@ -218,6 +262,9 @@ Les montants restent des nombres entiers, conformément à la structure
 confirmée de l’export et au traitement retenu.
 
 Le sens reste une colonne textuelle contenant D ou C.
+
+Les anomalies de format, de sens ou de montant doivent être examinées,
+et non corrigées arbitrairement pour obtenir un résultat attendu.
 
 ### 6.5. Enrichissement
 
@@ -239,6 +286,9 @@ Deux lignes similaires peuvent correspondre à deux opérations réelles.
 L’export présenté ne comporte pas d’identifiant unique de mouvement.
 Aucune suppression automatique des écritures similaires n’est donc réalisée.
 
+Code_J, Date ou Compte T ne constituent pas, pris isolément,
+des identifiants uniques d’écriture.
+
 ---
 
 ## 7. Contrôles de préparation
@@ -252,12 +302,22 @@ Quatre requêtes de contrôle sont documentées :
 | CONTROLE_ValiditeEcritures | Vérifier les champs, types, sens et montants |
 | CONTROLE_ConservationJointure | Comparer les lignes et montants avant et après enrichissement |
 
-### Résultats communiqués
+Les trois premières requêtes restituent les lignes à examiner.
+Un résultat sans anomalie doit donc être vide.
 
-L’auteur a indiqué avoir exécuté les contrôles dans son modèle
-avec des résultats satisfaisants.
+Le contrôle de conservation présente cinq lignes de synthèse,
+même lorsque les écarts sont nuls.
 
-Le contrôle de conservation a été déclaré conforme pour :
+### Résultats consignés
+
+Selon les confirmations de l’auteur reprises dans le journal :
+
+- les contrôles des niveaux, classes et écritures ont été exécutés,
+  sans anomalie signalée ;
+- le contrôle de conservation a présenté des écarts nuls
+  sur le périmètre testé.
+
+La conservation porte sur :
 
 - le nombre total de lignes ;
 - le nombre de lignes au débit ;
@@ -265,19 +325,23 @@ Le contrôle de conservation a été déclaré conforme pour :
 - le total des montants au débit ;
 - le total des montants au crédit.
 
-Les dates, versions et valeurs détaillées doivent être conservées
-dans le journal de contrôle.
+Les valeurs détaillées Avant et Après restent à renseigner
+dans le journal à partir du résultat de la requête.
 
-### Portée
+Elles ne doivent pas être reconstituées à partir des cartes du rapport.
+
+### Portée des contrôles
 
 La conservation est vérifiée entre le périmètre scolaire préparé
 avant jointure et la table enrichie.
 
-Il n’est pas attendu que le total débit soit égal au total crédit
-après exclusion des contreparties.
+Elle ne démontre pas, à elle seule :
 
-La conformité des agrégats ne prouve pas, à elle seule, l’exhaustivité
-des exports ni l’exactitude de chaque affectation.
+- l’exhaustivité des exports Sage ;
+- l’exactitude de chaque affectation scolaire ;
+- la conformité de toutes les opérations comptables.
+
+[Consulter le journal de contrôle qualité](controle-qualite.md)
 
 ---
 
@@ -291,7 +355,7 @@ Le modèle s’appuie sur :
 - Calendrier : dimension temporelle ;
 - Mesures : paramètre de champs.
 
-### Relations attendues
+### Relations documentées
 
 | Relation | Cardinalité |
 |---|---|
@@ -304,6 +368,11 @@ Le filtrage simple part des dimensions vers les écritures.
 Les clés du côté « un » doivent être uniques.
 Les chemins de filtrage ambigus doivent être évités.
 
+Une jointure Power Query ne crée pas automatiquement une relation
+dans le modèle Power BI.
+
+Le paramètre de champs `Mesures` reste déconnecté des tables métier.
+
 ### Deux sources de classe
 
 - Ecritures[Classe] décrit la classe portée par le mouvement.
@@ -313,7 +382,9 @@ Une différence doit être expliquée avant correction.
 
 Si le référentiel évolue entre plusieurs années académiques,
 l’analyse historique peut nécessiter une gestion des rattachements
-par période. La version courante ne doit pas être supposée valable
+par période.
+
+Le rattachement courant ne doit pas être supposé valable
 pour toutes les périodes sans contrôle.
 
 ---
@@ -322,26 +393,37 @@ pour toutes les périodes sans contrôle.
 
 ### Mouvements de période
 
-- Total Pension : montants des constatations au débit.
-- Total Réglé : montants des règlements au crédit.
-- Total lignes écritures : nombre de mouvements sélectionnés.
-- Total Montants : somme technique des montants sélectionnés.
+| Mesure | Signification |
+|---|---|
+| Total Pension | Montants des constatations au débit dans la période |
+| Total Réglé | Montants des règlements au crédit dans la période |
+| Total lignes écritures | Nombre de lignes comptables retenues dans le contexte |
+| Total Montants | Somme technique des montants sélectionnés |
 
 Sans filtre de sens, Total Montants additionne les débits et crédits.
 Cette mesure n’est donc ni un solde ni le montant des seuls frais.
+
+Le nombre de lignes comptables ne constitue ni un nombre d’élèves
+ni nécessairement un nombre d’opérations uniques.
 
 ### Effectifs
 
 L’effectif repose sur le nombre distinct de Compte T ayant
 une constatation de scolarité.
 
+- `Effectif` porte sur la période sélectionnée.
+- `Effectif actuel` porte sur le cumul depuis le début du cycle
+  jusqu’à l’arrêté mensuel.
+
 Un élève ayant plusieurs écritures reste compté une seule fois
 dans le périmètre évalué.
 
-Le cumul doit recalculer les comptes distincts sur toute la période.
-Il ne doit pas additionner les effectifs distincts mensuels.
+Le cumul recalcule les comptes distincts sur toute la période.
+Il ne résulte pas de l’addition des effectifs distincts mensuels.
 
 Cet indicateur ne mesure pas la présence quotidienne.
+Il ne démontre pas non plus, à lui seul, une nouvelle inscription
+administrative.
 
 ### Montants cumulés
 
@@ -360,13 +442,18 @@ Le taux de recouvrement est :
 Règlements cumulés / Scolarité constatée cumulée
 ```
 
-Une division non calculable reste vide.
+Une division non calculable reste vide selon la convention documentée.
+
 Les soldes négatifs et ratios inhabituels doivent être examinés,
 et non corrigés arbitrairement.
 
 Un solde positif ne constitue pas automatiquement un retard :
 les échéances de paiement doivent être connues pour établir
 cette qualification.
+
+Les totaux des mesures cumulatives doivent être recalculés
+dans leur contexte, et non obtenus en additionnant les cumuls
+de chaque ligne mensuelle.
 
 ---
 
@@ -380,7 +467,7 @@ Les mesures de situation s’arrêtent à la fin du mois sélectionné.
 |---|---|
 | Octobre 2025 | 01/08/2025 au 31/10/2025 |
 | Février 2026 | 01/08/2025 au 28/02/2026 |
-| Avril 2026 | 01/08/2025 au 30/04/2026 |
+| Avril 2026 | 01/08/2025 au 30/04/2026, selon les écritures disponibles |
 
 Le cumul ne repart pas à zéro en janvier.
 
@@ -391,8 +478,12 @@ Le cumul ne repart pas à zéro en janvier.
   définit l’arrêté.
 - Un mois postérieur au dernier mois contenant des écritures renvoie
   une valeur vide.
-- La dernière date d’écriture est déterminée globalement.
+- La dernière date d’écriture utilisée par la règle de disponibilité
+  est déterminée globalement dans les données chargées.
 - Les filtres scolaires restent applicables aux calculs selon le modèle.
+
+Une valeur vide au-delà du dernier mois disponible ne signifie
+ni un effectif nul ni un solde intégralement réglé.
 
 Le dernier mois disponible peut être incomplet.
 La présence d’une écriture ne garantit pas son exhaustivité.
@@ -400,7 +491,10 @@ La présence d’une écriture ne garantit pas son exhaustivité.
 ### Calendrier complet
 
 Le calendrier couvre les cycles académiques complets correspondant
-aux données disponibles.
+aux dates des données disponibles.
+
+Pour le périmètre documenté, il couvre le **1er août 2025
+au 31 juillet 2026**.
 
 Il peut donc contenir des dates sans opérations.
 Ces dates ne constituent ni des prévisions ni des résultats confirmés.
@@ -415,139 +509,265 @@ Le rapport doit proposer une sélection temporelle claire.
 
 ### Mouvements journaliers
 
-Les tableaux journaliers utilisent les mesures de base filtrées
-sur le jour concerné.
+Les tableaux journaliers utilisent les mesures de base dans le contexte
+de date sélectionné.
 
 Les cartes cumulées en fin de mois ne doivent pas être présentées
 comme une situation arrêtée à la fin du jour sélectionné.
 
 ---
 
-## 11. Paramètre de champs et restitution
+## 11. Paramètre de champs, restitution et galerie
 
-La table Mesures permet de sélectionner :
+### Sélection des indicateurs
+
+La table `Mesures` permet de sélectionner :
 
 - Pensions déjà Constatées ;
 - Règlements déjà perçus ;
 - Solde restant ;
 - Effectif actuel.
 
-Le paramètre sélectionne des mesures existantes.
-Il ne réalise pas leur calcul.
+Le paramètre est créé avec la fonctionnalité de paramètres de champs
+de Power BI.
+
+Il sélectionne des mesures existantes ; il ne réalise pas leur calcul.
 
 Une sélection unique est recommandée pour ne pas mélanger
 les montants en FCFA et les nombres d’élèves sur une même échelle.
 
-Les titres, unités et formats des graphiques doivent correspondre
-à l’indicateur sélectionné.
+Les titres, unités et formats doivent correspondre à l’indicateur
+sélectionné.
 
 ### Organisation du rapport
 
-1. Vue de synthèse.
-2. Progression académique.
-3. Analyse des mouvements mensuels.
-4. Situation individuelle.
-5. Suivi journalier.
+| Page | Fonction | Présentation dans la galerie |
+|---|---|---|
+| Dashboard 1 | Synthèse et répartitions par niveau, section et classe | Quatre variantes du sélecteur d’indicateur |
+| Dashboard 2 | Évolution des cumuls académiques | Une capture |
+| Dashboard 3 | Détails et tendances des mouvements mensuels | Une capture |
+| Dashboard 4 | Situation individuelle | Une capture avec des lignes entièrement synthétiques |
+| Dashboard 5 | Suivi journalier | Une capture avec des lignes entièrement synthétiques |
 
-Les interactions entre segments et visuels doivent être contrôlées.
+La galerie comprend donc **huit captures pour cinq pages**.
 
-Une mesure cumulative ne force pas un graphique à afficher des mois
-retirés de son axe par un segment.
+Les quatre variantes de Dashboard 1 montrent les répartitions
+des quatre indicateurs. Les cinq cartes de synthèse restent visibles
+dans chacune de ces variantes.
 
-Une vue rétrospective août-avril peut être présentée à côté d’un arrêté
-d’octobre, à condition que les titres et interactions rendent
-cette différence explicite.
+### Périmètres temporels des visuels
+
+Dans les captures de référence :
+
+- les cartes présentent la situation cumulée au 31 octobre 2025 ;
+- Dashboard 2 présente l’évolution des cumuls d’août 2025
+  à avril 2026 ;
+- les tableaux de Dashboard 3 présentent les mouvements d’octobre,
+  tandis que les courbes présentent les mouvements mensuels
+  sur plusieurs mois disponibles.
+
+Cette distinction est expliquée dans les descriptions de la galerie.
+
+Les interactions entre segments et visuels doivent être contrôlées
+dans le rapport. Une mesure cumulative ne force pas un graphique
+à afficher des mois retirés de son axe par un segment.
+
+La présence d’une vue rétrospective à côté d’un arrêté d’octobre
+n’implique pas que les opérations ultérieures étaient connues
+à cet arrêté.
+
+### Portée des captures
+
+Les PNG illustrent un état du rapport avec des filtres précis.
+
+Ils ne permettent pas d’utiliser les recherches, segments,
+boutons ou défilements depuis GitHub.
+
+Ils ne constituent pas une preuve de validation de toutes
+les interactions.
+
+[Consulter la galerie commentée](../images/README.md)
 
 ---
 
-## 12. Validation DAX prévue
+## 12. Validation DAX consignée et vérifications complémentaires
 
-Les formules révisées sont documentées, mais leur validation reste
-à consigner séparément des contrôles Power Query.
+La validation DAX est distincte des contrôles de préparation Power Query.
 
-Les tests doivent notamment couvrir :
+Les résultats de la campagne documentée sont consignés dans
+le [journal de contrôle qualité](controle-qualite.md).
 
-- le comptage distinct des élèves ;
-- les mouvements du mois d’octobre ;
-- les cumuls au 31 octobre 2025 ;
-- le passage de décembre à janvier ;
-- la situation à fin février 2026 ;
-- les filtres de classe, niveau et section ;
-- les mois sans mouvement ;
-- les sélections de plusieurs cycles ;
-- les mois postérieurs à la dernière donnée ;
-- le paramètre de champs et les formats des visuels.
+| Élément | Référence consignée |
+|---|---|
+| Date réelle d’exécution des tests | 19/10/2026 |
+| Version ou date d’extraction des fichiers | 07/10/2026 |
+| Version du modèle testé | suivi-scolarite-tests |
+| Situation principale contrôlée | Arrêté au 31 octobre 2025 |
+| Référence du commit correspondant | À renseigner dans le journal |
 
-### Repères de l’export fourni
+### Scénarios exécutés
 
-| Indicateur au 31 octobre 2025 | Valeur affichée |
+| ID | Test | Résultat consigné |
+|---|---|---|
+| DAX-01 | Situation d’octobre 2025 | Montants mensuels et cumulés conformes aux repères sur la version testée |
+| DAX-02 | Comptage distinct | 58 élèves sur octobre ; 221 en cumul à fin octobre |
+| DAX-03 | Passage décembre-janvier | Conservation des mouvements antérieurs dans les cumuls |
+| DAX-04 | Situation de février 2026 | Cumuls et solde conformes aux repères testés |
+| DAX-05 | Mai 2026, au-delà des données disponibles | Mesures cumulées vides selon la règle documentée |
+| DAX-06 | Filtre de section | Réaction des résultats confirmée par l’auteur |
+
+Aucun écart ni message d’erreur n’a été signalé par l’auteur
+pour ces scénarios.
+
+### Résultats d’octobre 2025
+
+| Indicateur | Résultat consigné |
 |---|---:|
-| Effectif | 221, à confirmer après comptage distinct |
+| Élèves distincts ayant une constatation en octobre | 58 |
+| Scolarité constatée pendant octobre | 3 805 000 FCFA |
+| Règlements enregistrés pendant octobre | 3 286 000 FCFA |
+| Effectif actuel — élèves distincts cumulés à fin octobre | 221 |
 | Scolarité constatée cumulée | 15 220 000 FCFA |
 | Règlements cumulés | 7 488 000 FCFA |
 | Solde restant | 7 732 000 FCFA |
-| Taux de recouvrement | 49,20 % |
+| Taux de recouvrement cumulé | 49,20 % |
 
-Ces valeurs servent de repères à données et filtres identiques.
+Ces valeurs correspondent au contexte documenté.
+Elles ne sont pas des constantes à imposer à toute version du modèle.
 
-Les résultats ne doivent pas être forcés pour reproduire un ancien
-export si une correction justifiée modifie le calcul.
+### Portée et contrôles complémentaires
+
+Les tests consignés ne valident pas automatiquement tous les filtres,
+paramètres, formats et interactions.
+
+Les vérifications complémentaires comprennent notamment :
+
+- les analyses détaillées par classe et niveau ;
+- le comportement complet du paramètre de champs ;
+- les interactions de la page journalière ;
+- les mois sans mouvement à l’intérieur de la période disponible ;
+- les sélections couvrant plusieurs cycles ;
+- le tri chronologique des axes et tableaux ;
+- le rapprochement avec le registre administratif des inscriptions ;
+- l’exhaustivité des exports par rapport à Sage ;
+- la concordance avec une version déployée dans Power BI Service,
+  le cas échéant.
+
+La liste de suivi et les résultats complémentaires doivent être
+tenus à jour dans le journal.
+
+La version de démonstration utilisant des données synthétiques
+doit être distinguée du modèle métier testé.
+
+Les conclusions de la campagne métier ne sont pas automatiquement
+transposées à cette version.
+
+Les données et les résultats ne doivent pas être modifiés arbitrairement
+pour reproduire un ancien export lorsqu’une correction justifiée
+modifie le calcul.
 
 ---
 
-## 13. Reproductibilité et versions
+## 13. Reproductibilité et gestion des versions
 
 Pour reproduire une analyse, conserver :
 
-- la version des exports ;
+- la nature des données : réelles ou synthétiques ;
+- la version des exports ou du jeu d’exemple ;
 - les formats de lecture ;
-- les paramètres ;
+- les paramètres de source ;
 - les scripts Power Query ;
 - les relations du modèle ;
-- les formules DAX ;
+- le calendrier et les formules DAX ;
+- la configuration du paramètre de champs ;
 - les filtres appliqués ;
-- les résultats des contrôles.
+- les résultats et les preuves des contrôles.
 
-Après une modification fonctionnelle :
+### Après une modification fonctionnelle
 
-1. Tester dans une copie du modèle.
-2. Comparer les résultats à périmètre identique.
-3. Expliquer les écarts.
-4. Documenter les corrections.
-5. Mettre à jour le rapport.
-6. Remplacer les captures et PDF devenus obsolètes.
-7. Enregistrer la nouvelle version dans GitHub.
+1. Travailler dans une copie du modèle.
+2. Identifier les traitements, mesures et visuels concernés.
+3. Rejouer les contrôles adaptés à la modification.
+4. Comparer les résultats à périmètre identique et expliquer les écarts.
+5. Consigner les corrections et les nouvelles conclusions.
+6. Mettre à jour la documentation et les supports devenus obsolètes.
+7. Versionner dans GitHub uniquement le code, la documentation
+   et les supports autorisés à la diffusion.
 
-Un commit GitHub ne met pas automatiquement à jour le modèle Power BI.
+Les versions des sources et du modèle contenant les données réelles
+restent dans l’environnement interne autorisé.
+
+Un commit de publication des captures ne constitue pas, à lui seul,
+une référence de validation du modèle.
+
+Un commit GitHub ne met pas automatiquement à jour le rapport
+Power BI Desktop ou une version déployée dans Power BI Service.
+
+### Limite de reproduction depuis le dépôt public
+
+La galerie ne constitue pas un jeu de données téléchargeable.
+
+La reconstruction nécessite Power BI Desktop, des données compatibles
+et autorisées, ainsi que la configuration des requêtes, relations,
+mesures et paramètres documentés.
+
+En l’absence de jeu compatible diffusable, le dépôt permet d’examiner
+la méthode et le code, mais pas de reproduire intégralement
+les résultats du modèle métier à partir des seuls fichiers publics.
+
+Un futur jeu synthétique téléchargeable devra être documenté
+et contrôlé séparément.
 
 ---
 
 ## 14. Limites et confidentialité
 
+### Limites d’interprétation
+
 - Les écritures ne constituent pas un registre de présence.
-- Le comptage comptable doit être rapproché du périmètre d’inscription.
+- L’effectif comptable doit être rapproché du registre des inscriptions.
 - L’exhaustivité des exports conditionne les résultats.
 - Un solde non réglé n’est pas nécessairement échu.
 - Les évolutions de classes ou de référentiels doivent être documentées.
+- Le dernier mois disponible peut être incomplet.
 - Les analyses rétrospectives ne sont pas des prévisions.
 - Aucun gain de recouvrement ou de productivité n’est revendiqué
   sans mesure de résultat.
 
-Les exports nominatifs et modèles contenant les données réelles
-restent hors du dépôt public.
+### Préparation de la version publique
 
-Les vues individuelles destinées à la démonstration doivent utiliser
-des exemples fictifs ou une présentation empêchant l’identification
-des élèves.
+La présentation du projet est autorisée selon les informations
+communiquées par l’auteur.
+
+La version publique distingue :
+
+- les restitutions agrégées des dashboards 1 à 3 ;
+- les lignes individuelles entièrement synthétiques des dashboards 4 et 5.
+
+L’auteur a confirmé que ces lignes synthétiques ne reproduisent aucune
+situation réelle d’élève. Leur préparation ne se limite pas
+au remplacement des noms.
+
+Cette adaptation concerne la version de démonstration.
+Elle ne requalifie pas les sources métier ni la campagne de tests.
+
+Les exports réels, les correspondances avec les identités réelles
+et les modèles contenant les données détaillées restent hors
+du dépôt public.
 
 Masquer une colonne dans un rapport ne retire pas son contenu
 du modèle.
+
+Les règles de diffusion, de stockage et de vérification des supports
+sont détaillées dans la
+[documentation de confidentialité](confidentialite.md).
 
 ---
 
 ## Documentation associée
 
 - [Présentation générale](../README.md)
+- [Galerie du rapport](../images/README.md)
 - [Dictionnaire des données](dictionnaire-donnees.md)
 - [Journal de contrôle qualité](controle-qualite.md)
 - [Préparation Power Query](../powerquery/README.md)
@@ -555,3 +775,5 @@ du modèle.
 - [Contrôles de qualité](../quality/README.md)
 - [Indicateurs DAX](../dax/README.md)
 - [Données et conditions de diffusion](../data/README.md)
+- [Confidentialité](confidentialite.md)
+- [Déploiement](deploiement.md)
