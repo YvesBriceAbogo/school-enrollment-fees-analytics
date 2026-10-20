@@ -466,6 +466,36 @@ et l’historique GitHub, sans les déduire de la date des tests métier.
 La publication de la galerie est un jalon documentaire.
 Elle ne clôture pas les vérifications complémentaires de la section 8.
 
+### 11.6. Jalon — Documentation et galerie harmonisées
+
+| Élément | Référence |
+|---|---|
+| Date du commit communiquée par l’auteur | 20/10/2026 |
+| Commit de référence | [`f49e19f`](https://github.com/YvesBriceAbogo/school-enrollment-fees-analytics/commit/f49e19f32e2bbff95fa392812d6c4120c750ac98) |
+| Message du commit | `chore: harmonisation des exclusions et ajout des PDF` |
+| Objet du jalon | Repère de l’état du dépôt après intégration de la galerie et harmonisation documentaire |
+
+Le changement enregistré par ce commit concerne les règles d’exclusion,
+notamment l’exclusion des PDF par défaut. Il ne correspond pas
+à l’ajout de fichiers PDF dans la galerie.
+
+Ce commit sert également de référence à l’ensemble de l’état versionné
+du dépôt à cet instant, et pas uniquement au fichier `.gitignore`.
+
+L’intégration des huit captures et les mises à jour documentaires
+ont été confirmées par l’auteur au cours de la préparation du projet.
+
+Ce jalon ne constitue ni une nouvelle campagne de tests,
+ni une vérification de la concordance avec Power BI Service,
+ni un audit exhaustif des fichiers et de l’historique du dépôt.
+
+Il ne remplace pas les références encore manquantes de la campagne
+de tests, du modèle utilisé pour les captures ou des publications
+initiales des différents supports.
+
+La date du jalon ne doit pas être interprétée comme la date
+de création initiale de chaque document ou capture.
+
 ---
 
 ## Documentation associée
