@@ -7,14 +7,18 @@
 # potentiellement des données et fichiers locaux sensibles.
 #
 # IMPORTANT
-# Ces règles concernent les fichiers non suivis par Git.
-# Elles ne retirent pas les fichiers déjà enregistrés.
-# Elles ne remplacent pas une vérification de confidentialité.
+# Ces règles concernent les fichiers non suivis lors des
+# opérations Git ordinaires.
+# Elles ne retirent ni les fichiers déjà suivis ni l'historique.
+# Elles ne détectent pas le contenu sensible.
+# Elles ne sécurisent pas les téléversements manuels sur GitHub.
+#
+# Les données réelles restent hors du dépôt public.
 # =====================================================
 
 
 # -----------------------------------------------------
-# 1. DOSSIERS RÉSERVÉS AUX DONNÉES NON PUBLIQUES
+# 1. DOSSIERS DE TRAVAIL À EXCLURE
 # -----------------------------------------------------
 
 /data/raw/
@@ -28,45 +32,54 @@
 # 2. EXPORTS COMPTABLES ET FICHIERS DE DONNÉES
 #
 # Inclut notamment E.txt, T.txt et G.txt.
-# Les échantillons fictifs éventuels seront autorisés
-# ultérieurement par des règles ciblées, après validation.
-# -----------------------------------------------------
-
-*.txt
-*.TXT
-
-*.csv
-*.CSV
-
-*.xls
-*.XLS
-*.xlsx
-*.XLSX
-*.xlsb
-*.XLSB
-*.xlsm
-*.XLSM
-
-
-# -----------------------------------------------------
-# 3. FICHIERS POWER BI NON VALIDÉS POUR DIFFUSION
+# Les motifs couvrent les variantes de casse des extensions.
 #
-# Un PBIX en mode Import peut contenir les données réelles.
-# Un PBIT ne contient pas les données importées, mais peut
-# exposer des requêtes, chemins et paramètres.
+# Aucune exception pour un jeu synthétique n'est activée.
+# Une éventuelle exception devra être ciblée après examen
+# des fichiers effectivement destinés à la publication.
 # -----------------------------------------------------
 
-*.pbix
-*.PBIX
-*.pbit
-*.PBIT
+*.[tT][xX][tT]
+*.[cC][sS][vV]
 
-# Fichiers locaux et caches des projets Power BI.
+*.[xX][lL][sS]
+*.[xX][lL][sS][xX]
+*.[xX][lL][sS][bB]
+*.[xX][lL][sS][mM]
+
+
+# -----------------------------------------------------
+# 3. FICHIERS POWER BI
+#
+# Un PBIX en mode Import peut contenir les données détaillées.
+# Un PBIT ne contient pas le cache des données importées,
+# mais peut conserver des définitions, chemins, paramètres
+# et valeurs sensibles.
+# -----------------------------------------------------
+
+*.[pP][bB][iI][xX]
+*.[pP][bB][iI][tT]
+
+# Exclusion prudente des fichiers locaux et caches .pbi.
+# Cette règle ne contrôle pas les autres fichiers d'un projet.
 **/.pbi/
 
 
 # -----------------------------------------------------
-# 4. CONFIGURATION LOCALE ET SECRETS
+# 4. PDF EXCLUS PAR DÉFAUT
+#
+# La galerie publique utilise des captures PNG.
+# Aucun PDF n'est nécessaire pour la compléter.
+#
+# Une exception pour un PDF préparé et contrôlé pourra
+# être ajoutée ultérieurement pour ce fichier précis.
+# -----------------------------------------------------
+
+*.[pP][dD][fF]
+
+
+# -----------------------------------------------------
+# 5. CONFIGURATION LOCALE ET SECRETS
 #
 # Ces règles portent sur des noms de fichiers.
 # Elles ne détectent pas les secrets inscrits ailleurs.
@@ -80,31 +93,30 @@ secrets.json
 
 
 # -----------------------------------------------------
-# 5. ARCHIVES ET SAUVEGARDES
+# 6. ARCHIVES ET SAUVEGARDES
 #
 # Elles peuvent contenir des données non publiques.
 # -----------------------------------------------------
 
-*.zip
-*.ZIP
-*.7z
-*.rar
-*.bak
-*.backup
+*.[zZ][iI][pP]
+*.7[zZ]
+*.[rR][aA][rR]
+*.[bB][aA][kK]
+*.[bB][aA][cC][kK][uU][pP]
 
 
 # -----------------------------------------------------
-# 6. FICHIERS TEMPORAIRES ET JOURNAUX LOCAUX
+# 7. FICHIERS TEMPORAIRES ET JOURNAUX LOCAUX
 # -----------------------------------------------------
 
 ~$*
-*.tmp
-*.temp
-*.log
+*.[tT][mM][pP]
+*.[tT][eE][mM][pP]
+*.[lL][oO][gG]
 
 
 # -----------------------------------------------------
-# 7. FICHIERS GÉNÉRÉS PAR LE SYSTÈME
+# 8. FICHIERS GÉNÉRÉS PAR LE SYSTÈME
 # -----------------------------------------------------
 
 .DS_Store
@@ -114,8 +126,13 @@ desktop.ini
 
 
 # -----------------------------------------------------
-# Les fichiers de documentation (.md), scripts (.pq, .dax),
-# images et PDF ne sont pas exclus par ces règles.
+# DOCUMENTATION, CODE ET GALERIE
 #
-# Leur contenu doit néanmoins être contrôlé avant diffusion.
+# Hors des dossiers exclus ci-dessus, les extensions
+# .md, .pq, .dax et .png ne sont pas exclues.
+#
+# Les huit PNG de images/ restent utilisables dans la galerie.
+#
+# Ne pas être ignoré par Git ne constitue pas une autorisation
+# de publication : le contenu reste à examiner avant diffusion.
 # -----------------------------------------------------
